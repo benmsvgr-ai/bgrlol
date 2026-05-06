@@ -908,3 +908,196 @@ html,body,#app{width:100dvw!important;height:100dvh!important;background:#9fd8f4
 .game-menu-item.primary{background:linear-gradient(160deg,#8cf4ff,#fff08d 48%,#ff94ce)!important;}
 .maplibregl-ctrl-logo,.maplibregl-ctrl-attrib{opacity:.42!important;}
 @media (min-width:760px){#app{max-width:480px!important;margin:0 auto!important;border-radius:0!important;overflow:hidden!important;box-shadow:0 0 0 1px rgba(255,255,255,.18),0 30px 80px rgba(0,0,0,.28)!important;}}
+
+
+/* =========================================================
+   V38 Street Anime Phone UI
+   - kamera rasa Pokemon GO: low angle, luas ke depan
+   - rotate kiri/kanan boleh, pitch atas-bawah dikunci via JS
+   - tombol UI dibuat glass anime dan tidak saling numpuk
+   - pointer-events UI dipaksa aktif supaya tombol tidak terasa error
+========================================================= */
+#map{z-index:1!important;}
+.screen-vignette{z-index:2!important;pointer-events:none!important;}
+.top-status,.top-actions,.move-pad,.main-action,.dex-action,.mapdex-action,.fab,.bottom-left-profile,.sheet-mini-btn,.bottom-sheet,.modal,.game-menu-modal,.mapdex-modal,.npc-dialog,.quest-popup{
+  pointer-events:auto!important;
+}
+.top-status,.top-actions,.move-pad,.main-action,.dex-action,.mapdex-action,.fab,.bottom-left-profile,.sheet-mini-btn{z-index:80!important;}
+.bottom-sheet{z-index:120!important}.modal,.npc-dialog,.quest-popup{z-index:160!important}.game-menu-modal,.mapdex-modal{z-index:220!important}
+
+.maplibregl-canvas{
+  filter:saturate(1.55) brightness(1.08) contrast(.96) hue-rotate(-5deg)!important;
+}
+.screen-vignette{
+  background:
+    linear-gradient(180deg,rgba(189,239,255,.30) 0%,rgba(255,255,255,0) 28%,rgba(62,189,255,.08) 72%,rgba(14,36,86,.32) 100%),
+    radial-gradient(circle at 50% 77%,transparent 0 36%,rgba(53,126,255,.10) 70%,rgba(5,19,58,.28) 100%)!important;
+}
+
+/* status kecil seperti HUD */
+.top-status.compact-status{
+  left:10px!important;
+  top:calc(env(safe-area-inset-top,0px) + 8px)!important;
+  width:170px!important;
+  max-width:170px!important;
+  padding:9px 11px!important;
+  border-radius:18px!important;
+  background:linear-gradient(180deg,rgba(20,51,114,.68),rgba(15,34,76,.56))!important;
+  border:1px solid rgba(255,255,255,.30)!important;
+  backdrop-filter:blur(18px) saturate(1.4)!important;
+  box-shadow:0 14px 34px rgba(25,55,120,.22),inset 0 1px 0 rgba(255,255,255,.24)!important;
+}
+
+/* kategori dibuat jadi strip transparan anime, bukan tombol gede menumpuk */
+.top-actions{
+  left:10px!important;
+  right:10px!important;
+  top:calc(env(safe-area-inset-top,0px) + 58px)!important;
+  bottom:auto!important;
+  display:flex!important;
+  flex-direction:row!important;
+  gap:7px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  padding:2px 2px 7px!important;
+  transform:none!important;
+  scrollbar-width:none!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+.top-actions::-webkit-scrollbar{display:none!important;}
+.pill{
+  flex:0 0 auto!important;
+  width:auto!important;
+  min-width:82px!important;
+  height:34px!important;
+  border-radius:999px!important;
+  padding:7px 12px!important;
+  font-size:11px!important;
+  line-height:1!important;
+  color:#ffffff!important;
+  background:linear-gradient(180deg,rgba(63,130,255,.58),rgba(35,82,177,.42))!important;
+  border:1px solid rgba(255,255,255,.34)!important;
+  backdrop-filter:blur(18px) saturate(1.5)!important;
+  box-shadow:0 10px 22px rgba(36,83,170,.18), inset 0 1px 0 rgba(255,255,255,.28)!important;
+}
+.pill:not(.active){opacity:.48!important;filter:grayscale(.25)!important;}
+
+/* karakter dibuat lebih terasa di bawah layar, bukan top-down */
+.player-map-marker{
+  width:132px!important;
+  height:158px!important;
+  transform:translate(-50%,-50%)!important;
+  filter:drop-shadow(0 28px 28px rgba(14,36,82,.32))!important;
+}
+.player-map-marker .player-ring{
+  width:118px!important;
+  height:82px!important;
+  left:50%!important;
+  top:70%!important;
+  transform:translate(-50%,-50%) rotateX(58deg)!important;
+  border:3px solid rgba(99,239,255,.86)!important;
+  box-shadow:0 0 30px rgba(90,232,255,.38), inset 0 0 18px rgba(255,255,255,.28)!important;
+}
+.player-map-marker .player-shadow{
+  width:56px!important;
+  height:16px!important;
+  top:82%!important;
+  opacity:.65!important;
+}
+.player-map-marker .player-sprite{
+  width:104px!important;
+  height:104px!important;
+  background-size:416px 416px!important;
+  top:46%!important;
+  transform:translate(-50%,-66%)!important;
+}
+.player-map-marker .player-sprite.idle,.player-map-marker .player-sprite.walk,.player-map-marker .player-sprite.run,.player-map-marker .player-sprite.face-left,.player-map-marker .player-sprite.face-right,.player-map-marker .player-sprite.face-up,.player-map-marker .player-sprite.face-down{transform:translate(-50%,-66%)!important;}
+
+/* tombol utama diganti dari nuansa merah/pokeball ke crystal anime hub */
+.main-action{
+  width:78px!important;
+  height:78px!important;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 12px)!important;
+  border-radius:28px!important;
+  background:
+    radial-gradient(circle at 50% 30%,rgba(255,255,255,.98) 0 18%,rgba(255,255,255,.52) 19% 28%,transparent 29%),
+    conic-gradient(from 210deg,#7bf6ff,#fff08c,#ff8ad8,#7bf6ff)!important;
+  border:1px solid rgba(255,255,255,.72)!important;
+  box-shadow:0 18px 44px rgba(96,226,255,.36),0 0 34px rgba(255,139,216,.25),inset 0 2px 0 rgba(255,255,255,.65)!important;
+  animation:hubFloatV38 2.4s ease-in-out infinite!important;
+}
+.main-action::after{
+  inset:22px!important;
+  border:2px solid rgba(22,66,135,.38)!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(202,244,255,.82))!important;
+  box-shadow:inset 0 0 14px rgba(73,196,255,.38)!important;
+}
+.main-action::before{
+  content:"HUB"!important;
+  bottom:-18px!important;
+  font-size:10px!important;
+  letter-spacing:.18em!important;
+  color:#ffffff!important;
+  text-shadow:0 2px 8px rgba(16,42,92,.62)!important;
+}
+@keyframes hubFloatV38{0%,100%{transform:translateX(-50%) translateY(0) scale(1)}50%{transform:translateX(-50%) translateY(-4px) scale(1.035)}}
+
+/* tombol kanan dibuat glass anime dan lebih rapi */
+.fab-locate,.mapdex-action,.dex-action{
+  right:12px!important;
+  border-radius:22px!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(226,247,255,.66))!important;
+  border:1px solid rgba(255,255,255,.54)!important;
+  backdrop-filter:blur(16px) saturate(1.45)!important;
+  color:#17386f!important;
+  box-shadow:0 15px 34px rgba(30,75,150,.18),inset 0 1px 0 rgba(255,255,255,.52)!important;
+}
+.fab-locate{bottom:calc(env(safe-area-inset-bottom,0px) + 198px)!important;width:58px!important;height:58px!important;}
+.mapdex-action{bottom:calc(env(safe-area-inset-bottom,0px) + 112px)!important;width:72px!important;height:70px!important;}
+.dex-action{bottom:calc(env(safe-area-inset-bottom,0px) + 28px)!important;width:72px!important;height:64px!important;}
+.fab-compass{display:none!important;}
+
+/* joystick lebih compact biar layar lega */
+.move-pad{
+  left:12px!important;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 104px)!important;
+  width:106px!important;
+  height:106px!important;
+  background:radial-gradient(circle,rgba(255,255,255,.48),rgba(255,255,255,.13) 70%)!important;
+  border:1px solid rgba(255,255,255,.42)!important;
+  backdrop-filter:blur(16px)!important;
+}
+.move-btn{width:39px!important;height:39px!important;border-radius:16px!important;}
+.move-btn.up{left:34px!important;top:6px!important}.move-btn.left{left:6px!important;top:34px!important}.move-btn.right{right:6px!important;top:34px!important}.move-btn.down{left:34px!important;bottom:6px!important}
+.bottom-left-profile{
+  left:12px!important;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 14px)!important;
+  max-width:250px!important;
+  transform:scale(.82)!important;
+}
+
+/* menu popup: glass transparent anime */
+.game-menu-card{
+  width:min(92vw,420px)!important;
+  border-radius:34px!important;
+  color:#fff!important;
+  background:
+    radial-gradient(circle at 15% 10%,rgba(124,246,255,.34),transparent 32%),
+    radial-gradient(circle at 85% 12%,rgba(255,142,216,.28),transparent 34%),
+    linear-gradient(160deg,rgba(17,39,92,.72),rgba(32,94,155,.58) 52%,rgba(18,35,88,.68))!important;
+  border:1px solid rgba(255,255,255,.34)!important;
+  backdrop-filter:blur(22px) saturate(1.45)!important;
+  box-shadow:0 28px 80px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.28)!important;
+}
+.game-menu-item{
+  background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(232,248,255,.66))!important;
+  border:1px solid rgba(255,255,255,.50)!important;
+  backdrop-filter:blur(14px)!important;
+  color:#15386e!important;
+}
+.game-menu-item.primary{background:linear-gradient(150deg,rgba(129,245,255,.92),rgba(255,240,144,.86) 55%,rgba(255,139,216,.82))!important;}
+.game-menu-desc{color:#ecfbff!important;}
+
+@media (min-width:760px){
+  #app{max-width:430px!important;margin:0 auto!important;}
+}
