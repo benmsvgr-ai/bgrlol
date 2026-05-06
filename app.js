@@ -10,7 +10,10 @@ const state = {
   hasRealGps: false,
   geoWatch: null,
   move: { up:false, down:false, left:false, right:false },
-  moveSpeedMeters: 8.5,
+  moveSpeedMeters: 18.5,
+  collisionEnabled: true,
+  collisionRadiusPx: 22,
+  collisionCooldown: 0,
   maxOffsetMeters: 1800,
   facing: "down",
   pois: [],
@@ -382,28 +385,53 @@ map.touchZoomRotate.enableRotation();
 
 
 function setupMapLibre3D(){
-  // Efek 3D tanpa Mapbox token: kalau style OpenFreeMap menyediakan layer building,
-  // MapLibre akan mengubahnya jadi ekstrusi gedung. Kalau sumber belum ada, aman dilewati.
+  // V34: Pokemon GO/anime map mode. Gedung 3D disembunyikan supaya peta terasa lapang,
+  // tapi layer collision transparan tetap ada agar karakter tidak gampang masuk area bangunan.
+  setupAnimeMapMode();
+}
+
+function getVectorBuildingSourceId(){
   const style = map.getStyle();
-  const vectorSourceId = style.sources && (style.sources.openmaptiles ? 'openmaptiles' : (style.sources.openfreemap ? 'openfreemap' : null));
-  if(!vectorSourceId || map.getLayer('bdx-3d-buildings')) return;
-  const labelLayer = (style.layers || []).find(l => l.type === 'symbol' && l.layout && l.layout['text-field']);
+  if(!style || !style.sources) return null;
+  if(style.sources.openmaptiles) return 'openmaptiles';
+  if(style.sources.openfreemap) return 'openfreemap';
+  return Object.keys(style.sources).find(id => /openmaptiles|openfreemap|osm|vector/i.test(id)) || null;
+}
+
+function setupAnimeMapMode(){
+  if(!map || !map.getStyle) return;
+  const style = map.getStyle();
+  const layers = style.layers || [];
+
+  // Hide visual building layers from the base style.
+  layers.forEach(layer => {
+    const id = String(layer.id || '').toLowerCase();
+    const sl = String(layer['source-layer'] || '').toLowerCase();
+    if(id.includes('building') || sl.includes('building')){
+      try{ map.setLayoutProperty(layer.id, 'visibility', 'none'); }catch(e){}
+    }
+  });
+
+  const vectorSourceId = getVectorBuildingSourceId();
+  if(!vectorSourceId) return;
+
   try{
-    map.addLayer({
-      id:'bdx-3d-buildings',
-      source:vectorSourceId,
-      'source-layer':'building',
-      type:'fill-extrusion',
-      minzoom:15,
-      paint:{
-        'fill-extrusion-color':['interpolate',['linear'],['zoom'],15,'#b9c7ff',18,'#e8edff'],
-        'fill-extrusion-height':['case',['has','render_height'],['get','render_height'],['has','height'],['get','height'],18],
-        'fill-extrusion-base':['case',['has','render_min_height'],['get','render_min_height'],['has','min_height'],['get','min_height'],0],
-        'fill-extrusion-opacity':0.56
-      }
-    }, labelLayer && labelLayer.id);
+    if(!map.getLayer('bdx-building-collision')){
+      const labelLayer = layers.find(l => l.type === 'symbol' && l.layout && l.layout['text-field']);
+      map.addLayer({
+        id:'bdx-building-collision',
+        source:vectorSourceId,
+        'source-layer':'building',
+        type:'fill',
+        minzoom:15,
+        paint:{
+          'fill-color':'#6ee7ff',
+          'fill-opacity':0.001
+        }
+      }, labelLayer && labelLayer.id);
+    }
   }catch(err){
-    console.warn('3D building layer skipped:', err);
+    console.warn('Anime collision layer skipped:', err);
   }
 }
 
@@ -730,6 +758,71 @@ function stopBrowse(){
     map.easeTo({ center: state.playerWorld, pitch: map.getPitch(), bearing: map.getBearing(), duration: 120, easing:t=>t });
   }, 180);
 }
+
+function getBuildingCollisionLayers(){
+  if(!map || !map.getStyle) return [];
+  const preferred = ['bdx-building-collision','bdx-3d-buildings','building','buildings','building-3d','3d-buildings'];
+  const found = [];
+  preferred.forEach(id => { if(map.getLayer(id)) found.push(id); });
+  const styleLayers = (map.getStyle().layers || []);
+  styleLayers.forEach(layer => {
+    const id = String(layer.id || '').toLowerCase();
+    const sourceLayer = String(layer['source-layer'] || '').toLowerCase();
+    if((layer.type === 'fill' || layer.type === 'fill-extrusion') && (id.includes('building') || sourceLayer.includes('building'))){
+      if(!found.includes(layer.id)) found.push(layer.id);
+    }
+  });
+  return found;
+}
+function isCoordBlockedByBuilding(coord){
+  if(!state.collisionEnabled || !map || !map.loaded || !map.loaded()) return false;
+  const layers = getBuildingCollisionLayers().filter(id => map.getLayer(id));
+  if(!layers.length) return false;
+  const p = map.project(coord);
+  const r = state.collisionRadiusPx || 20;
+  let features = [];
+  try{
+    features = map.queryRenderedFeatures([[p.x-r, p.y-r], [p.x+r, p.y+r]], { layers });
+  }catch(err){
+    return false;
+  }
+  return features.some(f => {
+    const sl = String(f.layer && f.layer['source-layer'] || '').toLowerCase();
+    const id = String(f.layer && f.layer.id || '').toLowerCase();
+    return id.includes('building') || sl.includes('building');
+  });
+}
+function worldFromOffset(x, y){
+  const [dLng, dLat] = metersToLngLatOffset(x, y, state.gpsBase[1]);
+  return [state.gpsBase[0] + dLng, state.gpsBase[1] + dLat];
+}
+function tryMoveWithCollision(mx, my){
+  const originalX = state.offsetMeters.x;
+  const originalY = state.offsetMeters.y;
+  const candidates = [
+    [originalX + mx, originalY + my, 'full'],
+    [originalX + mx, originalY, 'x'],
+    [originalX, originalY + my, 'y']
+  ];
+  for(const [nx, ny] of candidates){
+    const d = Math.hypot(nx, ny);
+    let tx = nx, ty = ny;
+    if(d > state.maxOffsetMeters){
+      const r = state.maxOffsetMeters / d;
+      tx *= r; ty *= r;
+    }
+    const nextCoord = worldFromOffset(tx, ty);
+    if(!isCoordBlockedByBuilding(nextCoord)){
+      state.offsetMeters.x = tx;
+      state.offsetMeters.y = ty;
+      state.playerWorld = nextCoord;
+      return true;
+    }
+  }
+  state.collisionCooldown = 12;
+  return false;
+}
+
 function updateMovement(dt=1/60){
   let mx = 0, my = 0;
   const step = state.moveSpeedMeters * Math.min(0.035, Math.max(0.008, dt));
@@ -745,13 +838,14 @@ function updateMovement(dt=1/60){
   if(Math.abs(mx) >= Math.abs(my) && mx !== 0) facing = mx < 0 ? "left" : "right";
   else if(my !== 0) facing = my > 0 ? "up" : "down";
   if(mx && my){ mx *= 0.7071; my *= 0.7071; }
-  state.offsetMeters.x += mx;
-  state.offsetMeters.y += my;
-  clampOffset();
-  recomputePlayerWorld();
+  const moved = tryMoveWithCollision(mx, my);
   if(!playerSprite().classList.contains("walk") || state.facing !== facing) setPlayerAnim("walk", facing);
-  map.jumpTo({ center: state.playerWorld, zoom: map.getZoom(), pitch: map.getPitch(), bearing: map.getBearing() });
-  detectNearby();
+  if(moved){
+    map.jumpTo({ center: state.playerWorld, zoom: map.getZoom(), pitch: map.getPitch(), bearing: map.getBearing() });
+    detectNearby();
+  }else{
+    updateStatus("Mentok gedung • cari jalan samping");
+  }
 }
 function bindMoveButton(btn){
   const dir = btn.dataset.dir;
@@ -790,8 +884,8 @@ map.on("load", () => {
   map.jumpTo({ center: state.playerWorld, zoom: 18.55, pitch: 56, bearing: 0 });
   document.getElementById("sheetContent").innerHTML = `
     <h3>BogorDex GO v32 MapLibre</h3>
-    <p>Map sudah migrasi penuh ke MapLibre GL: rotate, pitch/tilt, 3D building bila data tersedia, portal animasi, NPC, dan citizen report.</p>
-    <div class="section"><div class="section-title">Fix Inti</div><p>Basis Leaflet dibuang. Kamera sekarang MapLibre GL dengan style vector gratis tanpa kartu kredit Mapbox.</p></div>
+    <p>Map sudah MapLibre GL dengan mode anime: rotate, pitch/tilt, gedung visual disembunyikan seperti Pokemon GO, portal animasi, NPC, dan citizen report.</p>
+    <div class="section"><div class="section-title">Fix Inti</div><p>Basis Leaflet dibuang. Kamera sekarang MapLibre GL gratis tanpa kartu kredit Mapbox, dengan map pastel/anime dan gedung tidak lagi memenuhi layar.</p></div>
   `;
   state.lastPoi = {id:"intro",name:"BogorDex GO v32 MapLibre",desc:"Mode MapLibre 3D.",fungsi:"Dekati portal/NPC untuk quest, rotate/tilt map, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Firebase/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
   syncMiniButton();
@@ -826,6 +920,7 @@ let lastFrameTime = performance.now();
 function loop(now){
   const dt = Math.min(0.05, Math.max(0.001, (now - lastFrameTime) / 1000));
   lastFrameTime = now;
+  if(state.collisionCooldown > 0) state.collisionCooldown -= 1;
   updateMovement(dt);
   animatePortalRings();
   updateNpcNearState();
