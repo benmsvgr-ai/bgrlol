@@ -702,3 +702,46 @@ html,body,#app{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-fa
 .report-card h3{margin:12px 0 6px;font-size:28px;letter-spacing:-.03em}.report-card p{margin:0 0 14px;color:#52667f;line-height:1.5;font-weight:650}.report-card label{display:block;margin:12px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.12em;font-weight:1000;color:#53657b}.report-card select,.report-card textarea{width:100%;border:1px solid #d9e6f6;border-radius:18px;background:#fff;color:#17305b;font-weight:800;padding:12px 14px;outline:none}.report-card textarea{height:96px;resize:none;font-weight:650;line-height:1.45}.report-actions{display:flex;gap:10px;margin-top:14px}.report-actions button{flex:1;border:none;border-radius:999px;padding:13px 14px;font-weight:1000;cursor:pointer}.report-actions button:first-child{background:linear-gradient(180deg,#387cff,#2456d8);color:#fff;box-shadow:0 12px 24px rgba(36,86,216,.25)}.report-actions button:last-child{background:#edf3fb;color:#254369}
 .user-report-marker{border:none;background:transparent;cursor:pointer;filter:drop-shadow(0 10px 14px rgba(26,43,82,.25))}.report-pin{display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:18px 18px 18px 4px;transform:rotate(-45deg);background:linear-gradient(180deg,#fff,#eaf3ff);border:3px solid #fff;box-shadow:0 10px 22px rgba(48,85,160,.24)}.report-pin span{transform:rotate(45deg);font-size:23px}.report-pin.lobang{background:linear-gradient(180deg,#5d6470,#1f2937)}.report-pin.pohon{background:linear-gradient(180deg,#78e39b,#249d54)}.report-pin.pembangunan{background:linear-gradient(180deg,#ffd15a,#ff8d2e)}.report-pin.macet{background:linear-gradient(180deg,#ff6b76,#d8243b)}.report-pin.lainnya{background:linear-gradient(180deg,#7dd3fc,#2563eb)}
 @media (max-width:720px){.top-status.compact-status{top:10px;max-width:210px}.game-menu-grid{grid-template-columns:1fr}.report-card h3{font-size:24px}}
+
+
+/* ===== V31 movement tuning + character center + rotate map ===== */
+.player-anchor{
+  left:50% !important;
+  top:50% !important;
+  transform:translate(-50%,-50%) !important;
+}
+.player-sprite{
+  left:46% !important;
+  bottom:6px !important;
+}
+.player-shadow{
+  left:46% !important;
+  bottom:9px !important;
+}
+.scan-ring{
+  left:50% !important;
+  top:50% !important;
+  transform:translate(-50%,-50%) !important;
+}
+.player-sprite.idle.face-left{background-position:-208px 0;transform:scaleX(-1)!important}
+.player-sprite.idle.face-right{background-position:-208px 0;transform:none!important}
+.player-sprite.walk.face-left,.player-sprite.run.face-left{animation:sproutWalkSideV25 .78s steps(2) infinite;transform:scaleX(-1)!important}
+.player-sprite.walk.face-right,.player-sprite.run.face-right{animation:sproutWalkSideV25 .78s steps(2) infinite;transform:none!important}
+.player-sprite.walk.face-down,.player-sprite.run.face-down,.player-sprite.walk.face-up,.player-sprite.run.face-up{animation-duration:.78s!important}
+.fab-compass{opacity:1}
+.fab-compass span::after{content:""}
+
+
+/* =========================================================
+   BogorDex v32 - MapLibre migration final overrides
+   ========================================================= */
+.maplibregl-ctrl-bottom-left,.maplibregl-ctrl-bottom-right{display:none!important}
+.player-anchor{left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:104px!important;height:112px!important}
+.player-shadow{left:50%!important;bottom:18px!important;transform:translateX(-50%)!important;width:58px!important;height:17px!important}
+.player-sprite{left:50%!important;bottom:24px!important;transform:translateX(-50%)!important;width:88px!important;height:88px!important;background-size:352px 352px!important}
+.scan-ring{left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:152px!important;height:152px!important}
+.top-status.compact-status{min-width:138px!important;max-width:168px!important;padding:8px 10px!important;border-radius:18px!important;left:14px!important;top:12px!important;transform:none!important;text-align:left!important}
+.compact-status .status-row{font-size:12px!important;gap:7px!important}
+.compact-status .status-sub{font-size:10px!important;line-height:1.25!important;max-width:130px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.move-btn{transition:transform .12s ease, filter .12s ease}
+.move-btn:active{transform:scale(.92)!important;filter:brightness(1.15)}
