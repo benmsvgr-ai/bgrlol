@@ -878,3 +878,33 @@ html,body,#app{
 @media (orientation:landscape) and (max-height:560px){
   .top-actions{display:none!important}.bottom-left-profile{display:none!important}.move-pad{transform:scale(.82);transform-origin:left bottom}.mapdex-phone{height:94dvh;width:min(700px,94vw)}.mapdex-canvas{height:230px}.mapdex-list{height:calc(100% - 378px)}
 }
+
+/* ===== V37 Street Anime / Pokemon GO-like mobile camera ===== */
+html,body,#app{width:100dvw!important;height:100dvh!important;background:#9fd8f4!important;overscroll-behavior:none!important;touch-action:none!important;}
+#map{background:linear-gradient(180deg,#dff8ff,#9bdff2)!important;}
+.screen-vignette{background:radial-gradient(circle at 50% 66%, transparent 0 38%, rgba(88,194,255,.10) 72%, rgba(20,43,95,.24) 100%)!important;}
+.top-status.compact-status{left:12px!important;top:calc(env(safe-area-inset-top,0px) + 8px)!important;transform:none!important;min-width:0!important;width:158px!important;padding:8px 10px!important;border-radius:18px!important;text-align:left!important;background:linear-gradient(180deg,rgba(24,62,132,.82),rgba(18,43,92,.72))!important;}
+.top-status .status-row{font-size:12px!important;gap:6px!important}.top-status .status-sub{font-size:9px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.top-actions{top:calc(env(safe-area-inset-top,0px) + 74px)!important;right:10px!important;bottom:auto!important;gap:10px!important;transform:none!important;}
+.pill{width:88px!important;min-width:88px!important;height:76px!important;border-radius:30px!important;padding:8px!important;font-size:12px!important;background:linear-gradient(180deg,#3c7ff5,#2f6bdc)!important;box-shadow:0 14px 32px rgba(39,92,195,.25)!important;}
+.player-map-marker{width:116px!important;height:132px!important;filter:drop-shadow(0 20px 22px rgba(18,42,86,.28))!important;}
+.player-map-marker .player-ring{width:104px!important;height:104px!important;left:50%!important;top:58%!important;border:3px solid rgba(99,239,255,.86)!important;box-shadow:0 0 28px rgba(99,239,255,.34), inset 0 0 18px rgba(255,255,255,.22)!important;}
+.player-map-marker .player-shadow{width:46px!important;height:14px!important;left:50%!important;top:86%!important;background:rgba(17,38,79,.22)!important;filter:blur(2px)!important;}
+.player-map-marker .player-sprite{width:98px!important;height:98px!important;background-size:390px 390px!important;left:50%!important;top:54%!important;transform:translate(-50%,-68%)!important;}
+.player-map-marker .player-sprite.idle,.player-map-marker .player-sprite.walk,.player-map-marker .player-sprite.run,.player-map-marker .player-sprite.face-left,.player-map-marker .player-sprite.face-right,.player-map-marker .player-sprite.face-up,.player-map-marker .player-sprite.face-down{transform:translate(-50%,-68%)!important;}
+.move-pad{left:14px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 92px)!important;width:116px!important;height:116px!important;background:radial-gradient(circle,rgba(255,255,255,.50),rgba(255,255,255,.14) 70%)!important;border:1px solid rgba(255,255,255,.46)!important;box-shadow:0 20px 36px rgba(44,90,160,.22)!important;}
+.move-btn{background:linear-gradient(180deg,#fff,#edf7ff)!important;color:#183b77!important;box-shadow:0 10px 18px rgba(20,51,110,.18)!important;}
+.move-pad::after{content:"JALAN LINTASAN"!important;bottom:-25px!important;}
+.main-action{width:82px!important;height:82px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 10px)!important;background:radial-gradient(circle at 50% 34%,#fff 0 30%,#d6e2f5 31% 37%,transparent 38%),linear-gradient(180deg,#58e3ff 0 48%,#173672 48% 100%)!important;box-shadow:0 16px 38px rgba(74,217,255,.36),0 0 32px rgba(255,255,255,.20)!important;}
+.main-action::before{content:"HUB"!important;bottom:-18px!important;font-size:10px!important;letter-spacing:.18em!important;}
+.main-action::after{inset:27px!important;border-color:#7da7dc!important;}
+.main-action:hover,.main-action:active{transform:translateX(-50%) scale(1.04)!important;}
+.mapdex-action{right:14px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 104px)!important;width:82px!important;height:78px!important;border-radius:24px!important;background:linear-gradient(180deg,#fff,#e8f7ff)!important;color:#17386f!important;box-shadow:0 14px 28px rgba(33,77,150,.23)!important;}
+.dex-action{right:14px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 18px)!important;width:82px!important;height:70px!important;border-radius:24px!important;}
+.fab-locate{right:16px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 196px)!important;width:58px!important;height:58px!important;border-radius:22px!important;}
+.fab-compass{right:16px!important;top:calc(env(safe-area-inset-top,0px) + 342px)!important;width:58px!important;height:58px!important;border-radius:22px!important;}
+.game-menu-card{border-radius:34px!important;background:radial-gradient(circle at 22% 8%,rgba(108,235,255,.38),transparent 34%),radial-gradient(circle at 80% 22%,rgba(255,221,106,.30),transparent 34%),linear-gradient(160deg,rgba(17,39,94,.97),rgba(21,96,150,.95) 48%,rgba(25,36,98,.98))!important;}
+.game-menu-orb{background:linear-gradient(145deg,#56e5ff,#ffd76b 56%,#ff79c6)!important;box-shadow:0 18px 42px rgba(84,218,255,.30),0 0 36px rgba(255,215,107,.20)!important;}
+.game-menu-item.primary{background:linear-gradient(160deg,#8cf4ff,#fff08d 48%,#ff94ce)!important;}
+.maplibregl-ctrl-logo,.maplibregl-ctrl-attrib{opacity:.42!important;}
+@media (min-width:760px){#app{max-width:480px!important;margin:0 auto!important;border-radius:0!important;overflow:hidden!important;box-shadow:0 0 0 1px rgba(255,255,255,.18),0 30px 80px rgba(0,0,0,.28)!important;}}
