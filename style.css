@@ -17,7 +17,7 @@ html,body,#app{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-fa
 .fab-locate{bottom:198px;width:62px;height:62px}.fab-locate::before{content:"⌖";font-size:26px}
 .fab-compass{top:96px;width:58px;height:58px}.fab-compass::before{content:"";display:block;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:22px solid #ef5060;transform:rotate(18deg);margin-top:4px}
 .scan-ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(40vw,240px);height:min(40vw,240px);border-radius:50%;border:3px solid rgba(255,175,230,.96);z-index:12;pointer-events:none;box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 0 38px rgba(255,120,210,.12)}
-.player-anchor{position:absolute;left:50%;top:50%;transform:translate(-50%,-67%);z-index:15;width:108px;height:120px;pointer-events:none}
+.player-anchor{position:absolute;left:50%;top:50%;transform:translate(-50%,-61%);z-index:15;width:108px;height:120px;pointer-events:none}
 .player-shadow{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:44px;height:14px;border-radius:50%;background:rgba(0,0,0,.18);filter:blur(2px)}
 .player-sprite{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:96px;height:96px;background-image:url("assets/sprout_character.png");background-repeat:no-repeat;image-rendering:pixelated;background-size:384px 384px;background-color:transparent}
 .player-sprite.idle{background-position:0 0;animation:sproutIdle .8s steps(4) infinite}
@@ -88,10 +88,10 @@ html,body,#app{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-fa
 .player-sprite.idle.face-up{background-position:-104px 0;transform:none}
 .player-sprite.idle.face-left{background-position:-208px 0;transform:scaleX(-1)}
 .player-sprite.idle.face-right{background-position:-208px 0;transform:none}
-.player-sprite.walk.face-down,.player-sprite.run.face-down{animation:sproutWalkDownV25 .44s steps(2) infinite;transform:none}
-.player-sprite.walk.face-up,.player-sprite.run.face-up{animation:sproutWalkUpV25 .44s steps(2) infinite;transform:none}
-.player-sprite.walk.face-left,.player-sprite.run.face-left{animation:sproutWalkSideV25 .44s steps(2) infinite;transform:scaleX(-1)}
-.player-sprite.walk.face-right,.player-sprite.run.face-right{animation:sproutWalkSideV25 .44s steps(2) infinite;transform:none}
+.player-sprite.walk.face-down,.player-sprite.run.face-down{animation:sproutWalkDownV25 .34s steps(2) infinite;transform:none}
+.player-sprite.walk.face-up,.player-sprite.run.face-up{animation:sproutWalkUpV25 .34s steps(2) infinite;transform:none}
+.player-sprite.walk.face-left,.player-sprite.run.face-left{animation:sproutWalkSideV25 .34s steps(2) infinite;transform:scaleX(-1)}
+.player-sprite.walk.face-right,.player-sprite.run.face-right{animation:sproutWalkSideV25 .34s steps(2) infinite;transform:none}
 @keyframes sproutWalkDownV25{from{background-position:0 -104px}to{background-position:-208px -104px}}
 @keyframes sproutWalkUpV25{from{background-position:-208px -104px}to{background-position:-416px -104px}}
 @keyframes sproutWalkSideV25{from{background-position:0 -208px}to{background-position:-208px -208px}}
@@ -745,3 +745,32 @@ html,body,#app{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-fa
 .compact-status .status-sub{font-size:10px!important;line-height:1.25!important;max-width:130px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
 .move-btn{transition:transform .12s ease, filter .12s ease}
 .move-btn:active{transform:scale(.92)!important;filter:brightness(1.15)}
+
+
+/* ===== V34 Anime/Pokemon GO Map Mood ===== */
+.maplibregl-canvas{
+  filter:saturate(1.35) brightness(1.08) contrast(.92);
+}
+.screen-vignette{
+  background:
+    radial-gradient(circle at 50% 44%, rgba(255,255,255,0) 0 48%, rgba(109,230,255,.07) 72%, rgba(50,92,170,.18) 100%),
+    linear-gradient(180deg, rgba(135,218,255,.10), rgba(255,255,255,0) 38%, rgba(107,230,255,.08));
+}
+.top-status.compact-status{
+  background:linear-gradient(180deg, rgba(25,57,119,.82), rgba(18,42,90,.74));
+}
+.player-anchor{
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+}
+.scan-ring{
+  left:50%;
+  top:50%;
+}
+.portal-marker .portal-core{
+  box-shadow:0 0 22px rgba(107,230,255,.72),0 0 44px rgba(255,105,180,.44), inset 0 0 18px rgba(255,255,255,.70);
+}
+.portal-marker .portal-ring,.portal-marker .portal-ring::before,.portal-marker .portal-ring::after{
+  animation-duration:1.45s;
+}
