@@ -774,3 +774,107 @@ html,body,#app{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-fa
 .portal-marker .portal-ring,.portal-marker .portal-ring::before,.portal-marker .portal-ring::after{
   animation-duration:1.45s;
 }
+
+/* =========================================================
+   V36 MOBILE MAPDEX PATCH
+   - layar fokus Android portrait
+   - karakter jadi marker map, bukan overlay tengah layar saat peta digeser
+   - sprite pakai frame sheet 4x4 tanpa animasi muter
+   - MapDex phone panel
+========================================================= */
+html,body,#app{
+  width:100vw!important;
+  height:100vh!important;
+  height:100dvh!important;
+  min-height:100dvh!important;
+  overscroll-behavior:none;
+  touch-action:none;
+  background:#9ed4e8!important;
+}
+#map{width:100vw!important;height:100dvh!important;}
+.maplibregl-ctrl-logo,.maplibregl-ctrl-attrib{display:none!important;}
+.top-status.compact-status{
+  top:calc(env(safe-area-inset-top,0px) + 8px)!important;
+  min-width:0!important;
+  max-width:210px!important;
+  padding:8px 12px!important;
+  border-radius:16px!important;
+  text-align:left!important;
+  transform:translateX(-50%) scale(.92)!important;
+}
+.status-row{font-size:12px!important;gap:7px!important;display:flex;align-items:center;}
+.status-sub{font-size:9px!important;margin-top:2px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.top-actions{top:calc(env(safe-area-inset-top,0px) + 10px)!important;right:8px!important;gap:7px!important;transform:scale(.86);transform-origin:top right;}
+.pill{min-width:92px!important;padding:8px 10px!important;font-size:12px!important;box-shadow:0 8px 18px rgba(40,93,185,.16)!important;}
+.fab-locate{right:10px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 150px)!important;width:56px!important;height:56px!important;border-radius:18px!important;}
+.fab-compass{display:none!important;}
+.bottom-left-profile{left:10px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 14px)!important;transform:scale(.86);transform-origin:left bottom;}
+.move-pad{left:10px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 108px)!important;width:102px!important;height:102px!important;}
+.move-btn{width:40px!important;height:40px!important;font-size:16px!important;}
+.main-action{bottom:calc(env(safe-area-inset-bottom,0px) + 12px)!important;width:76px!important;height:76px!important;}
+.dex-action{right:10px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 18px)!important;width:66px!important;height:50px!important;border-radius:17px!important;}
+.mapdex-action{
+  position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 82px);z-index:23;
+  width:66px;height:62px;border:0;border-radius:20px;cursor:pointer;color:#123a72;font-weight:1000;
+  background:linear-gradient(180deg,#ffffff,#eaf3ff);
+  box-shadow:0 12px 24px rgba(25,55,111,.22), inset 0 0 0 1px rgba(255,255,255,.8);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+}
+.mapdex-action .phone-icon{font-size:25px;line-height:1;display:block;transform:rotate(0deg);}
+.mapdex-action small{font-size:10px;letter-spacing:.02em;}
+.sheet-mini-btn{right:10px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 152px)!important;}
+/* Fixed overlay player disembunyikan: player sekarang marker koordinat map. */
+.player-anchor,.scan-ring{display:none!important;}
+.player-map-marker{
+  position:relative;width:150px;height:150px;pointer-events:none;transform:translate(-50%,-50%);
+  filter:drop-shadow(0 18px 18px rgba(22,45,86,.22));
+}
+.player-map-marker .player-ring{
+  position:absolute;left:50%;top:50%;width:132px;height:132px;border-radius:50%;transform:translate(-50%,-50%);
+  border:2.5px solid rgba(95,229,255,.88);box-shadow:0 0 0 1px rgba(255,255,255,.22) inset,0 0 38px rgba(86,220,255,.22);
+  animation:playerRingPulse 2.8s ease-in-out infinite;
+}
+@keyframes playerRingPulse{0%,100%{opacity:.72;transform:translate(-50%,-50%) scale(.94)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.03)}}
+.player-map-marker .player-shadow{
+  position:absolute;left:50%;top:68%;width:54px;height:18px;border-radius:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(22,35,55,.24),rgba(22,35,55,0) 70%);
+}
+.player-map-marker .player-sprite{
+  position:absolute!important;left:50%!important;top:50%!important;bottom:auto!important;width:98px!important;height:98px!important;
+  transform:translate(-50%,-67%)!important;background-image:url("assets/sprout_character.png")!important;
+  background-repeat:no-repeat!important;background-size:390px 390px!important;background-position:var(--sprite-x,0px) var(--sprite-y,0px)!important;
+  animation:none!important;image-rendering:auto!important;background-color:transparent!important;
+}
+/* Pastikan semua class lama tidak ganggu frame V36 */
+.player-map-marker .player-sprite.idle,
+.player-map-marker .player-sprite.walk,
+.player-map-marker .player-sprite.run,
+.player-map-marker .player-sprite.face-left,
+.player-map-marker .player-sprite.face-right,
+.player-map-marker .player-sprite.face-up,
+.player-map-marker .player-sprite.face-down{animation:none!important;background-position:var(--sprite-x,0px) var(--sprite-y,0px)!important;transform:translate(-50%,-67%)!important;}
+.app-browsing .player-map-marker .player-ring{opacity:.42;animation:none;}
+.app-browsing .player-map-marker .player-sprite{filter:drop-shadow(0 0 0 rgba(0,0,0,0));}
+.mapdex-modal{position:absolute;inset:0;z-index:95;background:rgba(4,10,24,.48);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:18px;}
+.mapdex-modal.hidden{display:none;}
+.mapdex-phone{width:min(420px,94vw);height:min(760px,88dvh);border-radius:38px;padding:16px;background:linear-gradient(180deg,#0e1d3d,#162e61 42%,#f5fbff 42%);box-shadow:0 30px 80px rgba(0,0,0,.38), inset 0 0 0 3px rgba(255,255,255,.1);color:#142a4d;overflow:hidden;position:relative;}
+.mapdex-phone:before{content:"";position:absolute;left:50%;top:8px;transform:translateX(-50%);width:88px;height:5px;border-radius:999px;background:rgba(255,255,255,.28)}
+.mapdex-head{height:118px;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:8px 4px 10px;}
+.mapdex-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.14em;font-weight:900;color:#8ee8ff;}
+.mapdex-head h3{margin:3px 0 0;font-size:27px;line-height:1;}
+.mapdex-canvas{position:relative;height:310px;border-radius:28px;overflow:hidden;background:radial-gradient(circle at 50% 45%,rgba(121,232,255,.22),transparent 30%),linear-gradient(135deg,#a5ebd8,#83d4f7 45%,#7ac3f1);box-shadow:inset 0 0 0 1px rgba(255,255,255,.45),0 12px 28px rgba(37,75,133,.18);}
+.mapdex-canvas:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.18) 2px,transparent 2px),linear-gradient(0deg,rgba(255,255,255,.18) 2px,transparent 2px);background-size:44px 44px;opacity:.55;}
+.mapdex-canvas:after{content:"";position:absolute;left:50%;top:50%;width:160px;height:160px;border-radius:50%;border:2px dashed rgba(255,255,255,.7);transform:translate(-50%,-50%);}
+.mapdex-player-dot{position:absolute;left:50%;top:50%;z-index:5;transform:translate(-50%,-50%);width:52px;height:52px;border-radius:50%;background:linear-gradient(180deg,#fff,#dff8ff);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:1000;color:#164678;box-shadow:0 10px 25px rgba(18,58,119,.25);}
+.mapdex-pin{position:absolute;z-index:4;transform:translate(-50%,-100%);border:0;background:transparent;padding:0;cursor:pointer;color:#102c57;}
+.mapdex-pin i{display:flex;width:31px;height:31px;border-radius:50% 50% 50% 7px;transform:rotate(-45deg);align-items:center;justify-content:center;box-shadow:0 8px 16px rgba(21,53,100,.25);border:2px solid rgba(255,255,255,.9);}
+.mapdex-pin i span{transform:rotate(45deg);font-size:14px;}
+.mapdex-pin.portal i{background:#ff5e80}.mapdex-pin.npc i{background:#ffd84f}.mapdex-pin.report i{background:#6df0ad}
+.mapdex-legend{display:flex;gap:10px;align-items:center;justify-content:center;margin:12px 0 10px;color:#1c3760;font-size:11px;font-weight:900;}
+.mapdex-legend span{display:flex;align-items:center;gap:5px;}.mapdex-legend .pin{width:10px;height:10px;border-radius:50%;display:inline-block}.pin.portal{background:#ff5e80}.pin.npc{background:#ffd84f}.pin.report{background:#6df0ad}
+.mapdex-list{height:calc(100% - 458px);overflow:auto;padding-right:3px;display:grid;gap:8px;}
+.mapdex-row{border:0;border-radius:18px;background:#fff;color:#1c365f;text-align:left;padding:10px 12px;box-shadow:0 8px 18px rgba(30,70,130,.1);display:flex;justify-content:space-between;gap:10px;align-items:center;cursor:pointer;}
+.mapdex-row strong{display:block;font-size:13px;}.mapdex-row small{display:block;color:#60738e;font-weight:800;margin-top:2px;}.mapdex-row b{font-size:12px;color:#1f7bbd;white-space:nowrap;}
+@media (orientation:landscape) and (max-height:560px){
+  .top-actions{display:none!important}.bottom-left-profile{display:none!important}.move-pad{transform:scale(.82);transform-origin:left bottom}.mapdex-phone{height:94dvh;width:min(700px,94vw)}.mapdex-canvas{height:230px}.mapdex-list{height:calc(100% - 378px)}
+}
