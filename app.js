@@ -10,7 +10,7 @@ const state = {
   hasRealGps: false,
   geoWatch: null,
   move: { up:false, down:false, left:false, right:false },
-  moveSpeedMeters: 42.0,
+  moveSpeedMeters: 58.0,
   playerMarker: null,
   playerMarkerEl: null,
   playerFrameTick: 0,
@@ -403,9 +403,9 @@ function darken(hex, amount){
   return `rgb(${mix(r)},${mix(g)},${mix(b)})`;
 }
 
-const CAMERA_PITCH = 62;
-const CAMERA_ZOOM = 18.25;
-const CAMERA_AHEAD_METERS = 82;
+const CAMERA_PITCH = 74;
+const CAMERA_ZOOM = 18.45;
+const CAMERA_AHEAD_METERS = 210;
 function degToRad(d){ return d * Math.PI / 180; }
 function cameraCenterAhead(){
   const b = map && typeof map.getBearing === "function" ? map.getBearing() : 0;
@@ -442,6 +442,8 @@ const map = new maplibregl.Map({
   minZoom: 16.2,
   maxZoom: 20,
   pitch: CAMERA_PITCH,
+  minPitch: CAMERA_PITCH,
+  maxPitch: CAMERA_PITCH,
   bearing: 0,
   antialias: true,
   renderWorldCopies: false,
@@ -968,30 +970,43 @@ function tryMoveWithCollision(mx, my){
 }
 
 function updateMovement(dt=1/60){
-  let mx = 0, my = 0;
-  const step = state.moveSpeedMeters * Math.min(0.035, Math.max(0.008, dt));
-  if(state.move.up) my += step;
-  if(state.move.down) my -= step;
-  if(state.move.left) mx -= step;
-  if(state.move.right) mx += step;
-  if(!mx && !my){
+  const forwardInput = (state.move.up ? 1 : 0) - (state.move.down ? 1 : 0);
+  const strafeInput = (state.move.right ? 1 : 0) - (state.move.left ? 1 : 0);
+  if(!forwardInput && !strafeInput){
     if(!playerSprite().classList.contains("idle")) setPlayerAnim("idle");
     return;
   }
+
+  // V38: gerak karakter mengikuti arah kamera, bukan utara/selatan absolut.
+  // Jadi saat map di-rotate kiri/kanan, tombol atas tetap berarti maju ke depan layar.
+  const step = state.moveSpeedMeters * Math.min(0.033, Math.max(0.008, dt));
+  const bearingRad = degToRad(map && typeof map.getBearing === "function" ? map.getBearing() : 0);
+  const forwardX = Math.sin(bearingRad);
+  const forwardY = Math.cos(bearingRad);
+  const rightX = Math.cos(bearingRad);
+  const rightY = -Math.sin(bearingRad);
+  let mx = (forwardX * forwardInput + rightX * strafeInput) * step;
+  let my = (forwardY * forwardInput + rightY * strafeInput) * step;
+  if(forwardInput && strafeInput){ mx *= 0.7071; my *= 0.7071; }
+
   let facing = state.facing || "down";
-  if(Math.abs(mx) >= Math.abs(my) && mx !== 0) facing = mx < 0 ? "left" : "right";
-  else if(my !== 0) facing = my > 0 ? "up" : "down";
-  if(mx && my){ mx *= 0.7071; my *= 0.7071; }
+  if(Math.abs(strafeInput) > Math.abs(forwardInput)) facing = strafeInput < 0 ? "left" : "right";
+  else if(forwardInput) facing = forwardInput > 0 ? "up" : "down";
+
   const moved = tryMoveWithCollision(mx, my);
   state.playerFrameTick += dt;
-  if(state.playerFrameTick > 0.18){ state.playerFrameTick = 0; state.playerStepFrame = state.playerStepFrame ? 0 : 1; applyPlayerSpriteFrame(); }
+  if(state.playerFrameTick > 0.15){
+    state.playerFrameTick = 0;
+    state.playerStepFrame = state.playerStepFrame ? 0 : 1;
+    applyPlayerSpriteFrame();
+  }
   if(!playerSprite().classList.contains("walk") || state.facing !== facing) setPlayerAnim("walk", facing);
   if(moved){
     updatePlayerMapMarker();
     if(!state.browsing){ followPlayerCamera(); }
     detectNearby();
   }else{
-    updateStatus("Jalur tertutup • karakter hanya bisa jalan di jalan");
+    updateStatus("Jalur tertutup • karakter hanya bisa jalan di lintasan");
   }
 }
 function bindMoveButton(btn){
@@ -1030,12 +1045,13 @@ map.on("load", () => {
   recomputePlayerWorld();
   createPlayerMapMarker();
   followPlayerCamera({ zoom: CAMERA_ZOOM });
+  lockPitchOnly();
   document.getElementById("sheetContent").innerHTML = `
-    <h3>BogorDex GO v37 Street Anime</h3>
-    <p>MapLibre street-anime mode: kamera miring seperti berdiri di jalan, rotate kiri-kanan aktif, pitch atas-bawah dikunci, gedung transparan, dan karakter tetap road-only.</p>
+    <h3>BogorDex GO v38 Street Anime</h3>
+    <p>MapLibre street-anime mode: kamera lebih rendah seperti berdiri di jalan, rotate kiri-kanan aktif, pitch atas-bawah dikunci, gedung transparan, dan karakter tetap road-only.</p>
     <div class="section"><div class="section-title">Fix Inti</div><p>Basis MapLibre tetap dipakai tanpa kartu kredit Mapbox. Nuansa dibuat lebih game HP/Pokemon GO: gedung ghost transparan, kamera dari belakang karakter, MapDex phone aktif, dan laporan titik tetap jalan.</p></div>
   `;
-  state.lastPoi = {id:"intro",name:"BogorDex GO v37 Street Anime",desc:"Mode street-anime MapDex road-only.",fungsi:"Dekati portal/NPC untuk quest, rotate/tilt map, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Firebase/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
+  state.lastPoi = {id:"intro",name:"BogorDex GO v38 Street Anime",desc:"Mode street-anime MapDex road-only dengan kamera lebih luas ke depan.",fungsi:"Dekati portal/NPC untuk quest, rotate/tilt map, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Firebase/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
   syncMiniButton();
   loadUserReports();
   renderUserReports();
@@ -1052,6 +1068,7 @@ map.on("rotatestart", startBrowse);
 map.on("rotateend", stopBrowse);
 map.on("pitchstart", () => { startBrowse(); setTimeout(lockPitchOnly, 30); });
 map.on("pitch", lockPitchOnly);
+map.on("move", () => { if(Math.abs(map.getPitch() - CAMERA_PITCH) > 0.75) lockPitchOnly(); });
 map.on("pitchend", () => { lockPitchOnly(); stopBrowse(); });
 map.on("rotateend", () => { if(!state.browsing) followPlayerCamera({duration:80}); });
 
