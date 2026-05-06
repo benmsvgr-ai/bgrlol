@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>BogorDex GO v32 MapLibre 3D</title>
+  <title>BogorDex GO v36 Mobile MapDex</title>
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -90,6 +90,7 @@
       <button class="move-btn down" data-dir="down">▼</button>
     </div>
 
+    <button id="mapDexBtn" class="mapdex-action" title="Buka MapDex" aria-label="Buka MapDex"><span class="phone-icon">▣</span><small>MapDex</small></button>
     <button id="dexBtn" class="dex-action" title="Buka BogorDex"><span class="dex-icon">Dex</span></button>
 
     <button id="sheetMiniBtn" class="sheet-mini-btn hidden" title="Buka info">Info</button>
@@ -166,6 +167,29 @@
           <button id="reportSaveBtn">Pasang di Map</button>
           <button id="reportCancelBtn">Batal</button>
         </div>
+      </div>
+    </div>
+
+
+
+    <div id="mapDexModal" class="mapdex-modal hidden">
+      <div class="mapdex-phone">
+        <div class="mapdex-head">
+          <div>
+            <div class="mapdex-kicker">BogorDex Phone</div>
+            <h3>MapDex Radar</h3>
+          </div>
+          <button id="closeMapDexBtn" class="close-btn">×</button>
+        </div>
+        <div id="mapDexCanvas" class="mapdex-canvas">
+          <div class="mapdex-player-dot">YOU</div>
+        </div>
+        <div class="mapdex-legend">
+          <span><b class="pin portal"></b>Portal</span>
+          <span><b class="pin npc"></b>NPC</span>
+          <span><b class="pin report"></b>Laporan</span>
+        </div>
+        <div id="mapDexList" class="mapdex-list"></div>
       </div>
     </div>
 
