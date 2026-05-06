@@ -10,7 +10,7 @@ const state = {
   hasRealGps: false,
   geoWatch: null,
   move: { up:false, down:false, left:false, right:false },
-  moveSpeedMeters: 2.65,
+  moveSpeedMeters: 8.5,
   maxOffsetMeters: 1800,
   facing: "down",
   pois: [],
@@ -358,37 +358,54 @@ function darken(hex, amount){
   return `rgb(${mix(r)},${mix(g)},${mix(b)})`;
 }
 
+const MAPLIBRE_STYLE_URL = "https://tiles.openfreemap.org/styles/liberty";
+
 const map = new maplibregl.Map({
   container: "map",
-  style: {
-    version: 8,
-    sources: {
-      voyager: {
-        type: "raster",
-        tiles: [
-          "https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png",
-          "https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png",
-          "https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png",
-          "https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png"
-        ],
-        tileSize: 256,
-        attribution: "© OpenStreetMap contributors © CARTO"
-      }
-    },
-    layers: [{ id: "voyager", type: "raster", source: "voyager" }]
-  },
+  style: MAPLIBRE_STYLE_URL,
   center: state.playerWorld,
   zoom: 18.15,
-  minZoom: 16.4,
-  maxZoom: 19.3,
-  pitch: 62,
+  minZoom: 15.8,
+  maxZoom: 20,
+  pitch: 64,
   bearing: -18,
   antialias: true,
-  dragRotate: false,
-  pitchWithRotate: false,
-  touchPitch: false
+  renderWorldCopies: false,
+  refreshExpiredTiles: false,
+  fadeDuration: 80,
+  maxTileCacheSize: 192,
+  dragRotate: true,
+  pitchWithRotate: true,
+  touchPitch: true
 });
-map.touchZoomRotate.disableRotation();
+map.touchZoomRotate.enableRotation();
+
+
+function setupMapLibre3D(){
+  // Efek 3D tanpa Mapbox token: kalau style OpenFreeMap menyediakan layer building,
+  // MapLibre akan mengubahnya jadi ekstrusi gedung. Kalau sumber belum ada, aman dilewati.
+  const style = map.getStyle();
+  const vectorSourceId = style.sources && (style.sources.openmaptiles ? 'openmaptiles' : (style.sources.openfreemap ? 'openfreemap' : null));
+  if(!vectorSourceId || map.getLayer('bdx-3d-buildings')) return;
+  const labelLayer = (style.layers || []).find(l => l.type === 'symbol' && l.layout && l.layout['text-field']);
+  try{
+    map.addLayer({
+      id:'bdx-3d-buildings',
+      source:vectorSourceId,
+      'source-layer':'building',
+      type:'fill-extrusion',
+      minzoom:15,
+      paint:{
+        'fill-extrusion-color':['interpolate',['linear'],['zoom'],15,'#b9c7ff',18,'#e8edff'],
+        'fill-extrusion-height':['case',['has','render_height'],['get','render_height'],['has','height'],['get','height'],18],
+        'fill-extrusion-base':['case',['has','render_min_height'],['get','render_min_height'],['has','min_height'],['get','min_height'],0],
+        'fill-extrusion-opacity':0.56
+      }
+    }, labelLayer && labelLayer.id);
+  }catch(err){
+    console.warn('3D building layer skipped:', err);
+  }
+}
 
 const routeFeatures = {
   k5:{type:"Feature",geometry:{type:"LineString",coordinates:[[106.78984,-6.59458],[106.7942,-6.5937],[106.7986,-6.5914],[106.80643,-6.60276],[106.81581,-6.54236]]}},
@@ -710,15 +727,16 @@ function stopBrowse(){
   if(state.snapTimer) clearTimeout(state.snapTimer);
   state.snapTimer = setTimeout(() => {
     state.browsing = false;
-    map.easeTo({ center: state.playerWorld, duration: 180, easing:t=>t });
-  }, 120);
+    map.easeTo({ center: state.playerWorld, pitch: map.getPitch(), bearing: map.getBearing(), duration: 120, easing:t=>t });
+  }, 180);
 }
-function updateMovement(){
+function updateMovement(dt=1/60){
   let mx = 0, my = 0;
-  if(state.move.up) my += state.moveSpeedMeters;
-  if(state.move.down) my -= state.moveSpeedMeters;
-  if(state.move.left) mx -= state.moveSpeedMeters;
-  if(state.move.right) mx += state.moveSpeedMeters;
+  const step = state.moveSpeedMeters * Math.min(0.035, Math.max(0.008, dt));
+  if(state.move.up) my += step;
+  if(state.move.down) my -= step;
+  if(state.move.left) mx -= step;
+  if(state.move.right) mx += step;
   if(!mx && !my){
     if(!playerSprite().classList.contains("idle")) setPlayerAnim("idle");
     return;
@@ -732,7 +750,7 @@ function updateMovement(){
   clampOffset();
   recomputePlayerWorld();
   if(!playerSprite().classList.contains("walk") || state.facing !== facing) setPlayerAnim("walk", facing);
-  map.jumpTo({ center: state.playerWorld, zoom: map.getZoom(), pitch: 56, bearing: 0 });
+  map.jumpTo({ center: state.playerWorld, zoom: map.getZoom(), pitch: map.getPitch(), bearing: map.getBearing() });
   detectNearby();
 }
 function bindMoveButton(btn){
@@ -747,6 +765,7 @@ function bindMoveButton(btn){
 }
 
 map.on("load", () => {
+  setupMapLibre3D();
   map.addSource("route-k5",{type:"geojson",data:routeFeatures.k5});
   map.addSource("route-k6",{type:"geojson",data:routeFeatures.k6});
   map.addSource("route-run",{type:"geojson",data:routeFeatures.run});
@@ -770,11 +789,11 @@ map.on("load", () => {
   recomputePlayerWorld();
   map.jumpTo({ center: state.playerWorld, zoom: 18.55, pitch: 56, bearing: 0 });
   document.getElementById("sheetContent").innerHTML = `
-    <h3>BogorDex GO v30</h3>
-    <p>Mode quest portal + NPC + citizen report. Pemain bisa menambahkan info titik seperti lobang, pohon, pembangunan, dan kemacetan.</p>
-    <div class="section"><div class="section-title">Fix Inti</div><p>Status atas diperkecil, NPC disebar di titik map, karakter dibuat lebih stabil, dan tombol Tambah Info Titik ditambahkan di menu utama.</p></div>
+    <h3>BogorDex GO v32 MapLibre</h3>
+    <p>Map sudah migrasi penuh ke MapLibre GL: rotate, pitch/tilt, 3D building bila data tersedia, portal animasi, NPC, dan citizen report.</p>
+    <div class="section"><div class="section-title">Fix Inti</div><p>Basis Leaflet dibuang. Kamera sekarang MapLibre GL dengan style vector gratis tanpa kartu kredit Mapbox.</p></div>
   `;
-  state.lastPoi = {id:"intro",name:"BogorDex GO v30",desc:"Mode citizen report.",fungsi:"Dekati portal/NPC untuk quest, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Google Sheet/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
+  state.lastPoi = {id:"intro",name:"BogorDex GO v32 MapLibre",desc:"Mode MapLibre 3D.",fungsi:"Dekati portal/NPC untuk quest, rotate/tilt map, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Firebase/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
   syncMiniButton();
   loadUserReports();
   renderUserReports();
@@ -803,7 +822,15 @@ function animatePortalRings(){
   map.setPaintProperty("poi-ring-inner", "circle-radius", ["interpolate",["linear"],["zoom"],16.4,innerBase,19.3,innerBase*2.05]);
   map.setPaintProperty("poi-ring-inner", "circle-stroke-opacity", 0.50 + (1-wave) * 0.42);
 }
-function loop(){ updateMovement(); animatePortalRings(); updateNpcNearState(); requestAnimationFrame(loop); }
+let lastFrameTime = performance.now();
+function loop(now){
+  const dt = Math.min(0.05, Math.max(0.001, (now - lastFrameTime) / 1000));
+  lastFrameTime = now;
+  updateMovement(dt);
+  animatePortalRings();
+  updateNpcNearState();
+  requestAnimationFrame(loop);
+}
 
 function reportEmoji(category){
   return { lobang:"🕳️", pohon:"🌳", pembangunan:"🚧", macet:"🚦", lainnya:"📌" }[category] || "📌";
