@@ -10,8 +10,14 @@ const state = {
   hasRealGps: false,
   geoWatch: null,
   move: { up:false, down:false, left:false, right:false },
-  moveSpeedMeters: 18.5,
+  moveSpeedMeters: 29.5,
+  playerMarker: null,
+  playerMarkerEl: null,
+  playerFrameTick: 0,
+  playerStepFrame: 0,
   collisionEnabled: true,
+  roadOnlyMode: true,
+  roadRadiusPx: 34,
   collisionRadiusPx: 22,
   collisionCooldown: 0,
   maxOffsetMeters: 1800,
@@ -43,7 +49,7 @@ const state = {
 const statusEl = () => document.getElementById("statusText");
 const sheetEl = () => document.getElementById("bottomSheet");
 const miniBtn = () => document.getElementById("sheetMiniBtn");
-const playerSprite = () => document.getElementById("playerSprite");
+const playerSprite = () => document.getElementById("playerSpriteMap") || document.getElementById("playerSprite");
 
 function setStatus(text){
   statusEl().textContent = text;
@@ -158,10 +164,45 @@ function updateNpcNearState(){
 
 function setPlayerAnim(mode, facing){
   const el = playerSprite();
+  if(!el) return;
   if(facing) state.facing = facing;
+  state.playerMode = mode || "idle";
   el.classList.remove("idle","walk","run","face-down","face-up","face-left","face-right");
-  el.classList.add(mode);
+  el.classList.add(state.playerMode);
   el.classList.add("face-" + (state.facing || "down"));
+  applyPlayerSpriteFrame();
+}
+
+function applyPlayerSpriteFrame(){
+  const el = playerSprite();
+  if(!el) return;
+  const fw = 97.5;
+  const fh = 97.5;
+  const facingCols = { down:0, up:1, right:2, left:3 };
+  const facing = state.facing || "down";
+  let row = 0;
+  if(state.playerMode === "walk" || state.playerMode === "run"){
+    row = state.playerStepFrame ? 2 : 1;
+  }
+  const col = facingCols[facing] ?? 0;
+  el.style.setProperty("--sprite-x", (-col * fw) + "px");
+  el.style.setProperty("--sprite-y", (-row * fh) + "px");
+}
+
+function createPlayerMapMarker(){
+  if(state.playerMarker || !maplibregl || !map) return;
+  const el = document.createElement("div");
+  el.className = "player-map-marker";
+  el.innerHTML = `<div class="player-ring"></div><div class="player-shadow"></div><div id="playerSpriteMap" class="player-sprite idle face-down"></div>`;
+  state.playerMarkerEl = el;
+  state.playerMarker = new maplibregl.Marker({ element: el, anchor: "center", rotationAlignment: "viewport", pitchAlignment: "viewport" })
+    .setLngLat(state.playerWorld)
+    .addTo(map);
+  setPlayerAnim("idle", state.facing || "down");
+}
+
+function updatePlayerMapMarker(){
+  if(state.playerMarker) state.playerMarker.setLngLat(state.playerWorld);
 }
 function metersToLngLatOffset(mx, my, latDeg){
   const latRad = latDeg * Math.PI / 180;
@@ -177,6 +218,7 @@ function clampOffset(){
 function recomputePlayerWorld(){
   const [dLng, dLat] = metersToLngLatOffset(state.offsetMeters.x, state.offsetMeters.y, state.gpsBase[1]);
   state.playerWorld = [state.gpsBase[0] + dLng, state.gpsBase[1] + dLat];
+  updatePlayerMapMarker();
 }
 function haversineMeters(a, b){
   const R = 6371000;
@@ -367,21 +409,21 @@ const map = new maplibregl.Map({
   container: "map",
   style: MAPLIBRE_STYLE_URL,
   center: state.playerWorld,
-  zoom: 18.15,
+  zoom: 17.85,
   minZoom: 15.8,
   maxZoom: 20,
-  pitch: 64,
-  bearing: -18,
+  pitch: 0,
+  bearing: 0,
   antialias: true,
   renderWorldCopies: false,
   refreshExpiredTiles: false,
   fadeDuration: 80,
   maxTileCacheSize: 192,
-  dragRotate: true,
-  pitchWithRotate: true,
-  touchPitch: true
+  dragRotate: false,
+  pitchWithRotate: false,
+  touchPitch: false
 });
-map.touchZoomRotate.enableRotation();
+try{ map.touchZoomRotate.disableRotation(); }catch(e){}
 
 
 function setupMapLibre3D(){
@@ -750,13 +792,19 @@ function startLocation(){
     { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
   );
 }
-function startBrowse(){ state.browsing = true; if(state.snapTimer) clearTimeout(state.snapTimer); }
+function startBrowse(){
+  state.browsing = true;
+  document.getElementById("app")?.classList.add("app-browsing");
+  if(state.snapTimer) clearTimeout(state.snapTimer);
+}
 function stopBrowse(){
   if(state.snapTimer) clearTimeout(state.snapTimer);
   state.snapTimer = setTimeout(() => {
     state.browsing = false;
-    map.easeTo({ center: state.playerWorld, pitch: map.getPitch(), bearing: map.getBearing(), duration: 120, easing:t=>t });
-  }, 180);
+    document.getElementById("app")?.classList.remove("app-browsing");
+    // V36: jangan paksa map balik ke karakter setelah user geser peta.
+    // Karakter tetap di koordinat aslinya sebagai marker map.
+  }, 220);
 }
 
 function getBuildingCollisionLayers(){
@@ -774,23 +822,72 @@ function getBuildingCollisionLayers(){
   });
   return found;
 }
-function isCoordBlockedByBuilding(coord){
-  if(!state.collisionEnabled || !map || !map.loaded || !map.loaded()) return false;
-  const layers = getBuildingCollisionLayers().filter(id => map.getLayer(id));
-  if(!layers.length) return false;
-  const p = map.project(coord);
-  const r = state.collisionRadiusPx || 20;
-  let features = [];
-  try{
-    features = map.queryRenderedFeatures([[p.x-r, p.y-r], [p.x+r, p.y+r]], { layers });
-  }catch(err){
-    return false;
-  }
-  return features.some(f => {
-    const sl = String(f.layer && f.layer['source-layer'] || '').toLowerCase();
-    const id = String(f.layer && f.layer.id || '').toLowerCase();
-    return id.includes('building') || sl.includes('building');
+function getBlockedMapLayers(){
+  if(!map || !map.getStyle) return [];
+  const styleLayers = (map.getStyle().layers || []);
+  const found = [];
+  styleLayers.forEach(layer => {
+    const id = String(layer.id || '').toLowerCase();
+    const sl = String(layer['source-layer'] || '').toLowerCase();
+    const isSolid = layer.type === 'fill' || layer.type === 'fill-extrusion';
+    const isBlocked =
+      id.includes('building') || sl.includes('building') ||
+      id.includes('water') || sl.includes('water') ||
+      id.includes('waterway') || sl.includes('waterway') ||
+      id.includes('landcover') || sl.includes('landcover') ||
+      id.includes('park') || id.includes('grass') || id.includes('cemetery');
+    if(isSolid && isBlocked && !found.includes(layer.id)) found.push(layer.id);
   });
+  if(map.getLayer('bdx-building-collision') && !found.includes('bdx-building-collision')) found.push('bdx-building-collision');
+  return found;
+}
+function getRoadCollisionLayers(){
+  if(!map || !map.getStyle) return [];
+  const styleLayers = (map.getStyle().layers || []);
+  const found = [];
+  styleLayers.forEach(layer => {
+    const id = String(layer.id || '').toLowerCase();
+    const sl = String(layer['source-layer'] || '').toLowerCase();
+    const cls = String(layer.filter || '').toLowerCase();
+    const looksRoad =
+      layer.type === 'line' &&
+      !id.includes('label') &&
+      !id.includes('rail') &&
+      !id.includes('route') &&
+      !id.includes('water') &&
+      (id.includes('road') || id.includes('street') || id.includes('path') || id.includes('highway') || sl.includes('transportation') || cls.includes('road') || cls.includes('street') || cls.includes('path'));
+    if(looksRoad && !found.includes(layer.id)) found.push(layer.id);
+  });
+  return found;
+}
+function queryFeaturesAround(coord, layers, radiusPx){
+  if(!layers.length) return [];
+  const p = map.project(coord);
+  const r = radiusPx || 20;
+  try{
+    return map.queryRenderedFeatures([[p.x-r, p.y-r], [p.x+r, p.y+r]], { layers });
+  }catch(err){
+    return [];
+  }
+}
+function isCoordBlockedBySolidMap(coord){
+  if(!state.collisionEnabled || !map || !map.loaded || !map.loaded()) return false;
+  const layers = getBlockedMapLayers().filter(id => map.getLayer(id));
+  const features = queryFeaturesAround(coord, layers, state.collisionRadiusPx || 20);
+  return features.length > 0;
+}
+function isCoordOnRoad(coord){
+  if(!state.roadOnlyMode || !map || !map.loaded || !map.loaded()) return true;
+  const layers = getRoadCollisionLayers().filter(id => map.getLayer(id));
+  // Kalau style belum expose layer jalan, jangan bikin player stuck total.
+  if(!layers.length) return true;
+  const features = queryFeaturesAround(coord, layers, state.roadRadiusPx || 34);
+  return features.length > 0;
+}
+function canPlayerStandAt(coord){
+  if(isCoordBlockedBySolidMap(coord)) return false;
+  if(!isCoordOnRoad(coord)) return false;
+  return true;
 }
 function worldFromOffset(x, y){
   const [dLng, dLat] = metersToLngLatOffset(x, y, state.gpsBase[1]);
@@ -812,7 +909,7 @@ function tryMoveWithCollision(mx, my){
       tx *= r; ty *= r;
     }
     const nextCoord = worldFromOffset(tx, ty);
-    if(!isCoordBlockedByBuilding(nextCoord)){
+    if(canPlayerStandAt(nextCoord)){
       state.offsetMeters.x = tx;
       state.offsetMeters.y = ty;
       state.playerWorld = nextCoord;
@@ -839,12 +936,15 @@ function updateMovement(dt=1/60){
   else if(my !== 0) facing = my > 0 ? "up" : "down";
   if(mx && my){ mx *= 0.7071; my *= 0.7071; }
   const moved = tryMoveWithCollision(mx, my);
+  state.playerFrameTick += dt;
+  if(state.playerFrameTick > 0.18){ state.playerFrameTick = 0; state.playerStepFrame = state.playerStepFrame ? 0 : 1; applyPlayerSpriteFrame(); }
   if(!playerSprite().classList.contains("walk") || state.facing !== facing) setPlayerAnim("walk", facing);
   if(moved){
-    map.jumpTo({ center: state.playerWorld, zoom: map.getZoom(), pitch: map.getPitch(), bearing: map.getBearing() });
+    updatePlayerMapMarker();
+    if(!state.browsing){ map.jumpTo({ center: state.playerWorld, zoom: map.getZoom(), pitch: 0, bearing: 0 }); }
     detectNearby();
   }else{
-    updateStatus("Mentok gedung • cari jalan samping");
+    updateStatus("Jalur tertutup • karakter hanya bisa jalan di jalan");
   }
 }
 function bindMoveButton(btn){
@@ -881,13 +981,14 @@ map.on("load", () => {
     }
   });
   recomputePlayerWorld();
-  map.jumpTo({ center: state.playerWorld, zoom: 18.55, pitch: 56, bearing: 0 });
+  createPlayerMapMarker();
+  map.jumpTo({ center: state.playerWorld, zoom: 17.95, pitch: 0, bearing: 0 });
   document.getElementById("sheetContent").innerHTML = `
-    <h3>BogorDex GO v32 MapLibre</h3>
-    <p>Map sudah MapLibre GL dengan mode anime: rotate, pitch/tilt, gedung visual disembunyikan seperti Pokemon GO, portal animasi, NPC, dan citizen report.</p>
-    <div class="section"><div class="section-title">Fix Inti</div><p>Basis Leaflet dibuang. Kamera sekarang MapLibre GL gratis tanpa kartu kredit Mapbox, dengan map pastel/anime dan gedung tidak lagi memenuhi layar.</p></div>
+    <h3>BogorDex GO v36 Mobile MapDex</h3>
+    <p>MapLibre mode mobile: kamera top-down stabil, tidak tilt/rotate atas-bawah, karakter jadi marker koordinat map, dan jalan tetap road-only/collision.</p>
+    <div class="section"><div class="section-title">Fix Inti</div><p>Basis MapLibre tetap dipakai tanpa kartu kredit Mapbox. UI sudah disesuaikan layar Android, MapDex phone aktif, dan user bisa geser peta tanpa memindahkan karakter.</p></div>
   `;
-  state.lastPoi = {id:"intro",name:"BogorDex GO v32 MapLibre",desc:"Mode MapLibre 3D.",fungsi:"Dekati portal/NPC untuk quest, rotate/tilt map, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Firebase/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
+  state.lastPoi = {id:"intro",name:"BogorDex GO v36 Mobile MapDex",desc:"Mode mobile MapDex road-only.",fungsi:"Dekati portal/NPC untuk quest, rotate/tilt map, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Firebase/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
   syncMiniButton();
   loadUserReports();
   renderUserReports();
@@ -990,16 +1091,70 @@ function scanNearestFromMenu(){
   if(!hit){ updateStatus('Belum ada titik untuk discan'); return; }
   state.discovered.add(hit.poi.id);
   renderDex();
-  map.easeTo({center: hit.poi.coords, zoom: 18.85, pitch: 56, bearing: 0, duration: 450});
+  map.easeTo({center: hit.poi.coords, zoom: 18.2, pitch: 0, bearing: 0, duration: 450});
   openSheet(hit.poi, 'manual');
   updateStatus('Scan menemukan: ' + hit.poi.name);
 }
 function resetGameCamera(){
   state.browsing = false;
   if(state.snapTimer) clearTimeout(state.snapTimer);
-  map.easeTo({ center: state.playerWorld, zoom: 18.55, pitch: 56, bearing: 0, duration: 320 });
+  state.browsing = false; document.getElementById("app")?.classList.remove("app-browsing"); map.easeTo({ center: state.playerWorld, zoom: 17.95, pitch: 0, bearing: 0, duration: 320 });
 }
 
+
+function getMapDexItems(){
+  const items = [];
+  (state.pois || []).forEach(p => { if(p.coords) items.push({type:"portal", name:p.name, coords:p.coords, emoji:"🌀", ref:p}); });
+  (state.npcs || []).forEach(n => { if(n.coords) items.push({type:"npc", name:n.name, coords:n.coords, emoji:"!", ref:n}); });
+  (state.userReports || []).forEach(r => { if(r.coords) items.push({type:"report", name:r.note || "Info warga", coords:r.coords, emoji:"📍", ref:r}); });
+  return items.map(item => ({...item, dist:haversineMeters(state.playerWorld, item.coords)})).sort((a,b)=>a.dist-b.dist).slice(0,60);
+}
+function focusMapDexItem(item){
+  closeMapDex();
+  map.easeTo({ center:item.coords, zoom:18.25, pitch:0, bearing:0, duration:450 });
+  if(item.type === "portal" && item.ref) openSheet(item.ref, "manual");
+  if(item.type === "npc" && item.ref) openNpcDialog(item.ref.id);
+  if(item.type === "report" && item.ref){
+    openSheet({id:item.ref.id,name:"Info Warga",desc:item.ref.note || "Info titik",fungsi:"Kategori: " + reportEmoji(item.ref.category),tupoksi:"Titik laporan dari user.",group:"CITIZEN REPORT",aktif:true}, "manual");
+  }
+}
+function openMapDex(){
+  renderMapDex();
+  document.getElementById("mapDexModal").classList.remove("hidden");
+}
+function closeMapDex(){ document.getElementById("mapDexModal").classList.add("hidden"); }
+function renderMapDex(){
+  const canvas = document.getElementById("mapDexCanvas");
+  const list = document.getElementById("mapDexList");
+  if(!canvas || !list) return;
+  canvas.querySelectorAll(".mapdex-pin").forEach(n => n.remove());
+  list.innerHTML = "";
+  const items = getMapDexItems();
+  const rectSize = 310;
+  const radiusMeters = 900;
+  items.slice(0,28).forEach((item, idx) => {
+    const dx = haversineMeters(state.playerWorld, [item.coords[0], state.playerWorld[1]]) * (item.coords[0] >= state.playerWorld[0] ? 1 : -1);
+    const dy = haversineMeters(state.playerWorld, [state.playerWorld[0], item.coords[1]]) * (item.coords[1] >= state.playerWorld[1] ? -1 : 1);
+    const x = Math.max(8, Math.min(92, 50 + (dx / radiusMeters) * 42));
+    const y = Math.max(10, Math.min(92, 50 + (dy / radiusMeters) * 42));
+    const btn = document.createElement("button");
+    btn.className = "mapdex-pin " + item.type;
+    btn.style.left = x + "%";
+    btn.style.top = y + "%";
+    btn.title = item.name;
+    btn.innerHTML = `<i><span>${item.emoji}</span></i>`;
+    btn.addEventListener("click", () => focusMapDexItem(item));
+    canvas.appendChild(btn);
+  });
+  items.slice(0,20).forEach(item => {
+    const row = document.createElement("button");
+    row.className = "mapdex-row";
+    const label = item.type === "portal" ? "Portal" : item.type === "npc" ? "NPC" : "Laporan";
+    row.innerHTML = `<span><strong>${item.name}</strong><small>${label}</small></span><b>${Math.round(item.dist)} m</b>`;
+    row.addEventListener("click", () => focusMapDexItem(item));
+    list.appendChild(row);
+  });
+}
 
 document.getElementById("locateBtn").addEventListener("click", startLocation);
 document.getElementById("resetViewBtn").addEventListener("click", resetGameCamera);
@@ -1025,6 +1180,9 @@ document.getElementById("npcDialogLaterBtn").addEventListener("click", closeNpcD
 document.getElementById("npcDialogQuestBtn").addEventListener("click", acceptNpcQuest);
 document.getElementById("npcDialog").addEventListener("click", (e) => { if(e.target.id === "npcDialog") closeNpcDialog(); });
 document.getElementById("questCloseBtn").addEventListener("click", hideQuestPopup);
+document.getElementById("mapDexBtn").addEventListener("click", openMapDex);
+document.getElementById("closeMapDexBtn").addEventListener("click", closeMapDex);
+document.getElementById("mapDexModal").addEventListener("click", (e) => { if(e.target.id === "mapDexModal") closeMapDex(); });
 document.getElementById("dexBtn").addEventListener("click", () => document.getElementById("dexModal").classList.remove("hidden"));
 document.getElementById("closeDexBtn").addEventListener("click", () => document.getElementById("dexModal").classList.add("hidden"));
 document.getElementById("sheetHandle").addEventListener("click", () => { sheetEl().classList.remove("hidden-sheet"); sheetEl().classList.toggle("collapsed"); syncMiniButton(); });
