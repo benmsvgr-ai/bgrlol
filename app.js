@@ -10,15 +10,15 @@ const state = {
   hasRealGps: false,
   geoWatch: null,
   move: { up:false, down:false, left:false, right:false },
-  moveSpeedMeters: 29.5,
+  moveSpeedMeters: 42.0,
   playerMarker: null,
   playerMarkerEl: null,
   playerFrameTick: 0,
   playerStepFrame: 0,
   collisionEnabled: true,
   roadOnlyMode: true,
-  roadRadiusPx: 34,
-  collisionRadiusPx: 22,
+  roadRadiusPx: 42,
+  collisionRadiusPx: 18,
   collisionCooldown: 0,
   maxOffsetMeters: 1800,
   facing: "down",
@@ -403,27 +403,57 @@ function darken(hex, amount){
   return `rgb(${mix(r)},${mix(g)},${mix(b)})`;
 }
 
+const CAMERA_PITCH = 62;
+const CAMERA_ZOOM = 18.25;
+const CAMERA_AHEAD_METERS = 82;
+function degToRad(d){ return d * Math.PI / 180; }
+function cameraCenterAhead(){
+  const b = map && typeof map.getBearing === "function" ? map.getBearing() : 0;
+  const rad = degToRad(b);
+  // bearing 0 = map menghadap utara. Center digeser ke depan supaya karakter terlihat di bawah layar.
+  const mx = Math.sin(rad) * CAMERA_AHEAD_METERS;
+  const my = Math.cos(rad) * CAMERA_AHEAD_METERS;
+  const [dLng,dLat] = metersToLngLatOffset(mx, my, state.playerWorld[1]);
+  return [state.playerWorld[0] + dLng, state.playerWorld[1] + dLat];
+}
+function followPlayerCamera(opts={}){
+  if(!map) return;
+  const bearing = typeof opts.bearing === "number" ? opts.bearing : map.getBearing();
+  const zoom = typeof opts.zoom === "number" ? opts.zoom : Math.max(CAMERA_ZOOM, map.getZoom());
+  const payload = { center: cameraCenterAhead(), zoom, pitch: CAMERA_PITCH, bearing };
+  if(opts.duration) map.easeTo({ ...payload, duration: opts.duration, easing:t=>t });
+  else map.jumpTo(payload);
+}
+function lockPitchOnly(){
+  if(!map) return;
+  const currentPitch = Math.round(map.getPitch());
+  if(Math.abs(currentPitch - CAMERA_PITCH) > 1){
+    map.easeTo({ pitch: CAMERA_PITCH, duration: 120 });
+  }
+}
+
 const MAPLIBRE_STYLE_URL = "https://tiles.openfreemap.org/styles/liberty";
 
 const map = new maplibregl.Map({
   container: "map",
   style: MAPLIBRE_STYLE_URL,
   center: state.playerWorld,
-  zoom: 17.85,
-  minZoom: 15.8,
+  zoom: CAMERA_ZOOM,
+  minZoom: 16.2,
   maxZoom: 20,
-  pitch: 0,
+  pitch: CAMERA_PITCH,
   bearing: 0,
   antialias: true,
   renderWorldCopies: false,
   refreshExpiredTiles: false,
   fadeDuration: 80,
   maxTileCacheSize: 192,
-  dragRotate: false,
+  dragRotate: true,
   pitchWithRotate: false,
   touchPitch: false
 });
-try{ map.touchZoomRotate.disableRotation(); }catch(e){}
+try{ map.touchZoomRotate.enableRotation(); }catch(e){}
+try{ map.dragRotate.enable(); }catch(e){}
 
 
 function setupMapLibre3D(){
@@ -445,7 +475,7 @@ function setupAnimeMapMode(){
   const style = map.getStyle();
   const layers = style.layers || [];
 
-  // Hide visual building layers from the base style.
+  // Mode Pokemon GO: gedung tetap ada sebagai volume MapLibre, tapi transparan/tembus pandang.
   layers.forEach(layer => {
     const id = String(layer.id || '').toLowerCase();
     const sl = String(layer['source-layer'] || '').toLowerCase();
@@ -458,8 +488,25 @@ function setupAnimeMapMode(){
   if(!vectorSourceId) return;
 
   try{
+    const labelLayer = layers.find(l => l.type === 'symbol' && l.layout && l.layout['text-field']);
+    const beforeId = labelLayer && labelLayer.id;
+    if(!map.getLayer('bdx-ghost-buildings')){
+      map.addLayer({
+        id:'bdx-ghost-buildings',
+        source:vectorSourceId,
+        'source-layer':'building',
+        type:'fill-extrusion',
+        minzoom:15,
+        paint:{
+          'fill-extrusion-color':'#78ddff',
+          'fill-extrusion-height':['interpolate',['linear'],['zoom'],15,2,18,['coalesce',['get','render_height'],['get','height'],18]],
+          'fill-extrusion-base':['coalesce',['get','render_min_height'],['get','min_height'],0],
+          'fill-extrusion-opacity':0.22,
+          'fill-extrusion-vertical-gradient':true
+        }
+      }, beforeId);
+    }
     if(!map.getLayer('bdx-building-collision')){
-      const labelLayer = layers.find(l => l.type === 'symbol' && l.layout && l.layout['text-field']);
       map.addLayer({
         id:'bdx-building-collision',
         source:vectorSourceId,
@@ -470,10 +517,10 @@ function setupAnimeMapMode(){
           'fill-color':'#6ee7ff',
           'fill-opacity':0.001
         }
-      }, labelLayer && labelLayer.id);
+      }, beforeId);
     }
   }catch(err){
-    console.warn('Anime collision layer skipped:', err);
+    console.warn('Ghost building layer skipped:', err);
   }
 }
 
@@ -784,7 +831,7 @@ function startLocation(){
       state.gpsBase = [pos.coords.longitude, pos.coords.latitude];
       clampOffset();
       recomputePlayerWorld();
-      if(!state.browsing) map.easeTo({ center: state.playerWorld, duration: 250, easing:t=>t });
+      if(!state.browsing) followPlayerCamera({ duration:250 });
       detectNearby();
       updateStatus("Lokasi aktif");
     },
@@ -941,7 +988,7 @@ function updateMovement(dt=1/60){
   if(!playerSprite().classList.contains("walk") || state.facing !== facing) setPlayerAnim("walk", facing);
   if(moved){
     updatePlayerMapMarker();
-    if(!state.browsing){ map.jumpTo({ center: state.playerWorld, zoom: map.getZoom(), pitch: 0, bearing: 0 }); }
+    if(!state.browsing){ followPlayerCamera(); }
     detectNearby();
   }else{
     updateStatus("Jalur tertutup • karakter hanya bisa jalan di jalan");
@@ -982,13 +1029,13 @@ map.on("load", () => {
   });
   recomputePlayerWorld();
   createPlayerMapMarker();
-  map.jumpTo({ center: state.playerWorld, zoom: 17.95, pitch: 0, bearing: 0 });
+  followPlayerCamera({ zoom: CAMERA_ZOOM });
   document.getElementById("sheetContent").innerHTML = `
-    <h3>BogorDex GO v36 Mobile MapDex</h3>
-    <p>MapLibre mode mobile: kamera top-down stabil, tidak tilt/rotate atas-bawah, karakter jadi marker koordinat map, dan jalan tetap road-only/collision.</p>
-    <div class="section"><div class="section-title">Fix Inti</div><p>Basis MapLibre tetap dipakai tanpa kartu kredit Mapbox. UI sudah disesuaikan layar Android, MapDex phone aktif, dan user bisa geser peta tanpa memindahkan karakter.</p></div>
+    <h3>BogorDex GO v37 Street Anime</h3>
+    <p>MapLibre street-anime mode: kamera miring seperti berdiri di jalan, rotate kiri-kanan aktif, pitch atas-bawah dikunci, gedung transparan, dan karakter tetap road-only.</p>
+    <div class="section"><div class="section-title">Fix Inti</div><p>Basis MapLibre tetap dipakai tanpa kartu kredit Mapbox. Nuansa dibuat lebih game HP/Pokemon GO: gedung ghost transparan, kamera dari belakang karakter, MapDex phone aktif, dan laporan titik tetap jalan.</p></div>
   `;
-  state.lastPoi = {id:"intro",name:"BogorDex GO v36 Mobile MapDex",desc:"Mode mobile MapDex road-only.",fungsi:"Dekati portal/NPC untuk quest, rotate/tilt map, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Firebase/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
+  state.lastPoi = {id:"intro",name:"BogorDex GO v37 Street Anime",desc:"Mode street-anime MapDex road-only.",fungsi:"Dekati portal/NPC untuk quest, rotate/tilt map, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Firebase/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
   syncMiniButton();
   loadUserReports();
   renderUserReports();
@@ -1003,8 +1050,10 @@ map.on("zoomstart", startBrowse);
 map.on("zoomend", stopBrowse);
 map.on("rotatestart", startBrowse);
 map.on("rotateend", stopBrowse);
-map.on("pitchstart", startBrowse);
-map.on("pitchend", stopBrowse);
+map.on("pitchstart", () => { startBrowse(); setTimeout(lockPitchOnly, 30); });
+map.on("pitch", lockPitchOnly);
+map.on("pitchend", () => { lockPitchOnly(); stopBrowse(); });
+map.on("rotateend", () => { if(!state.browsing) followPlayerCamera({duration:80}); });
 
 function animatePortalRings(){
   if(!map || !map.getLayer || !map.getLayer("poi-ring-outer")) return;
@@ -1091,14 +1140,14 @@ function scanNearestFromMenu(){
   if(!hit){ updateStatus('Belum ada titik untuk discan'); return; }
   state.discovered.add(hit.poi.id);
   renderDex();
-  map.easeTo({center: hit.poi.coords, zoom: 18.2, pitch: 0, bearing: 0, duration: 450});
+  map.easeTo({center: hit.poi.coords, zoom: 18.2, pitch: CAMERA_PITCH, bearing: map.getBearing(), duration: 450});
   openSheet(hit.poi, 'manual');
   updateStatus('Scan menemukan: ' + hit.poi.name);
 }
 function resetGameCamera(){
   state.browsing = false;
   if(state.snapTimer) clearTimeout(state.snapTimer);
-  state.browsing = false; document.getElementById("app")?.classList.remove("app-browsing"); map.easeTo({ center: state.playerWorld, zoom: 17.95, pitch: 0, bearing: 0, duration: 320 });
+  state.browsing = false; document.getElementById("app")?.classList.remove("app-browsing"); followPlayerCamera({ zoom: CAMERA_ZOOM, duration: 320 });
 }
 
 
@@ -1111,7 +1160,7 @@ function getMapDexItems(){
 }
 function focusMapDexItem(item){
   closeMapDex();
-  map.easeTo({ center:item.coords, zoom:18.25, pitch:0, bearing:0, duration:450 });
+  map.easeTo({ center:item.coords, zoom:18.25, pitch:CAMERA_PITCH, bearing:map.getBearing(), duration:450 });
   if(item.type === "portal" && item.ref) openSheet(item.ref, "manual");
   if(item.type === "npc" && item.ref) openNpcDialog(item.ref.id);
   if(item.type === "report" && item.ref){
