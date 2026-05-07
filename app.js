@@ -26,7 +26,7 @@ const state = {
   activePoiId: null,
   activePoiMode: null,
   activeQuestPoiId: null,
-  portalNoticeRadiusMeters: 62,
+  portalNoticeRadiusMeters: 36,
   portalSeenIds: new Set(),
   portalDismissedIds: new Set(),
   deviceHeadingEnabled: false,
@@ -52,6 +52,34 @@ const state = {
     { id:"npc_girl", name:"Nisa", role:"Penjaga Quest", asset:"assets/npc/npc-girl.png", bubble:"Kalau mendekati portal, quest akan muncul. Kalau bingung, ngobrol dulu sama NPC.", quest:"Misi: dekati portal sampai popup quest keluar, lalu tekan Mulai Quest." }
   ]
 };
+
+const PORTAL_POPUP_DONE_KEY = "bogordex_portal_popup_done_v41";
+function loadPortalPopupDone(){
+  try{
+    const raw = localStorage.getItem(PORTAL_POPUP_DONE_KEY);
+    const ids = raw ? JSON.parse(raw) : [];
+    if(Array.isArray(ids)){
+      state.portalSeenIds = new Set(ids);
+      state.portalDismissedIds = new Set(ids);
+    }
+  }catch(e){}
+}
+function savePortalPopupDone(){
+  try{
+    const ids = Array.from(new Set([
+      ...Array.from(state.portalSeenIds || []),
+      ...Array.from(state.portalDismissedIds || [])
+    ]));
+    localStorage.setItem(PORTAL_POPUP_DONE_KEY, JSON.stringify(ids));
+  }catch(e){}
+}
+function markPortalPopupDone(id){
+  if(!id) return;
+  state.portalSeenIds.add(id);
+  state.portalDismissedIds.add(id);
+  savePortalPopupDone();
+}
+loadPortalPopupDone();
 
 const statusEl = () => document.getElementById("statusText");
 const sheetEl = () => document.getElementById("bottomSheet");
@@ -418,6 +446,25 @@ function getCameraBearing(){
   if(state.deviceHeadingEnabled && typeof state.deviceHeadingBearing === "number") return state.deviceHeadingBearing;
   return map && typeof map.getBearing === "function" ? map.getBearing() : 0;
 }
+function getScreenOrientationAngle(){
+  try{
+    if(screen && screen.orientation && typeof screen.orientation.angle === "number") return screen.orientation.angle || 0;
+  }catch(e){}
+  if(typeof window.orientation === "number") return window.orientation || 0;
+  return 0;
+}
+function applyDeviceHeadingToCamera(heading, duration=80){
+  heading = normalizeHeading(heading);
+  if(heading === null) return;
+  state.deviceHeadingBearing = heading;
+  state.deviceHeadingEnabled = true;
+  state.deviceHeadingLastAt = Date.now();
+  if(map){
+    const payload = { center: cameraCenterAhead(), zoom: CAMERA_ZOOM, pitch: CAMERA_PITCH, bearing: heading, duration, easing:t=>t };
+    if(duration) map.easeTo(payload);
+    else map.jumpTo(payload);
+  }
+}
 function cameraCenterAhead(){
   const b = getCameraBearing();
   const rad = degToRad(b);
@@ -759,9 +806,11 @@ function applyLayerFilters(){
 function questPopupEl(){ return document.getElementById("questPopup"); }
 function showQuestPopup(poi, dist){
   const el = questPopupEl();
-  if(!el || state.activeQuestPoiId === poi.id) return;
+  if(!poi || !poi.id || !el || state.activeQuestPoiId === poi.id) return;
   if(state.portalDismissedIds.has(poi.id) || state.portalSeenIds.has(poi.id)) return;
-  state.portalSeenIds.add(poi.id);
+  // Portal quest hanya boleh muncul sekali. Begitu popup pertama kali tampil,
+  // id langsung disimpan supaya tidak spam muncul lagi walaupun user masih di radius.
+  markPortalPopupDone(poi.id);
   state.activeQuestPoiId = poi.id;
   state.lastPoi = poi;
   document.getElementById("questPortalName").textContent = poi.name;
@@ -774,7 +823,7 @@ function showQuestPopup(poi, dist){
   el.classList.add("quest-pop");
 }
 function hideQuestPopup(markDismissed=false){
-  if(markDismissed && state.activeQuestPoiId) state.portalDismissedIds.add(state.activeQuestPoiId);
+  if(markDismissed && state.activeQuestPoiId) markPortalPopupDone(state.activeQuestPoiId);
   const el = questPopupEl();
   if(el) el.classList.add("hidden");
   state.activeQuestPoiId = null;
@@ -784,7 +833,7 @@ function startQuestFromPopup(){
   if(!state.lastPoi) return;
   state.discovered.add(state.lastPoi.id);
   renderDex();
-  if(state.lastPoi && state.lastPoi.id) state.portalDismissedIds.add(state.lastPoi.id);
+  if(state.lastPoi && state.lastPoi.id) markPortalPopupDone(state.lastPoi.id);
   hideQuestPopup(true);
   openSheet(state.lastPoi, "manual");
   updateStatus("Quest dibuka: " + state.lastPoi.name);
@@ -848,20 +897,23 @@ function normalizeHeading(value){
 }
 function handleDeviceOrientation(ev){
   let heading = null;
-  if(typeof ev.webkitCompassHeading === "number") heading = ev.webkitCompassHeading;
-  else if(ev.absolute === true && typeof ev.alpha === "number") heading = 360 - ev.alpha;
-  else if(typeof ev.alpha === "number") heading = 360 - ev.alpha;
+  if(typeof ev.webkitCompassHeading === "number"){
+    // iOS/Safari: ini heading kompas asli.
+    heading = ev.webkitCompassHeading;
+  }else if(ev.absolute === true && typeof ev.alpha === "number"){
+    // Android Chrome: alpha absolut. Koreksi orientasi layar supaya portrait/landscape tetap pas.
+    heading = 360 - ev.alpha + getScreenOrientationAngle();
+  }else if(typeof ev.alpha === "number" && ev.absolute !== false){
+    heading = 360 - ev.alpha + getScreenOrientationAngle();
+  }
   heading = normalizeHeading(heading);
   if(heading === null) return;
   // smoothing ringan supaya kamera tidak gemetar saat sensor HP berubah kecil-kecil
   if(typeof state.deviceHeadingBearing === "number"){
     let diff = ((heading - state.deviceHeadingBearing + 540) % 360) - 180;
-    heading = normalizeHeading(state.deviceHeadingBearing + diff * 0.18);
+    heading = normalizeHeading(state.deviceHeadingBearing + diff * 0.24);
   }
-  state.deviceHeadingBearing = heading;
-  state.deviceHeadingEnabled = true;
-  state.deviceHeadingLastAt = Date.now();
-  if(!state.browsing) followPlayerCamera({ bearing: heading, duration: 80 });
+  applyDeviceHeadingToCamera(heading, 70);
 }
 async function requestDeviceCompass(){
   if(state.compassRequested) return;
@@ -873,7 +925,8 @@ async function requestDeviceCompass(){
     }
     window.addEventListener("deviceorientationabsolute", handleDeviceOrientation, true);
     window.addEventListener("deviceorientation", handleDeviceOrientation, true);
-    updateStatus("Kompas HP aktif • pandangan mengikuti arah HP");
+    window.addEventListener("orientationchange", () => setTimeout(() => { if(state.deviceHeadingEnabled) followPlayerCamera({ duration:120 }); }, 180), true);
+    updateStatus("Kompas HP aktif • arah pandangan mengikuti HP");
   }catch(err){
     console.warn("Compass unavailable", err);
   }
@@ -889,9 +942,15 @@ function startLocation(){
       state.gpsBase = [pos.coords.longitude, pos.coords.latitude];
       clampOffset();
       recomputePlayerWorld();
+      if(pos.coords && Number.isFinite(pos.coords.heading)){
+        // Fallback: kalau sensor kompas browser tidak aktif, pakai arah gerak GPS.
+        if(!state.deviceHeadingEnabled && (pos.coords.speed || 0) > 0.6){
+          applyDeviceHeadingToCamera(pos.coords.heading, 180);
+        }
+      }
       if(!state.browsing) followPlayerCamera({ duration:250 });
       detectNearby();
-      updateStatus("Lokasi aktif");
+      updateStatus(state.deviceHeadingEnabled ? "Lokasi aktif • kompas aktif" : "Lokasi aktif");
     },
     (err) => { state.hasRealGps = false; updateStatus("Lokasi gagal: " + err.message); },
     { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
@@ -1215,7 +1274,7 @@ function scanNearestFromMenu(){
   const hit = nearestPoiWithin(state.playerWorld, 999999);
   if(!hit){ updateStatus('Belum ada titik untuk discan'); return; }
   state.discovered.add(hit.poi.id);
-  state.portalDismissedIds.add(hit.poi.id);
+  markPortalPopupDone(hit.poi.id);
   renderDex();
   map.easeTo({center: hit.poi.coords, zoom: 18.2, pitch: CAMERA_PITCH, bearing: getCameraBearing(), duration: 450});
   openSheet(hit.poi, 'manual');
@@ -1239,7 +1298,7 @@ function getMapDexItems(){
 function focusMapDexItem(item){
   closeMapDex();
   map.easeTo({ center:item.coords, zoom:18.25, pitch:CAMERA_PITCH, bearing:getCameraBearing(), duration:450 });
-  if(item.type === "portal" && item.ref){ state.portalDismissedIds.add(item.ref.id); openSheet(item.ref, "manual"); }
+  if(item.type === "portal" && item.ref){ markPortalPopupDone(item.ref.id); openSheet(item.ref, "manual"); }
   if(item.type === "npc" && item.ref) openNpcDialog(item.ref.id);
   if(item.type === "report" && item.ref){
     openSheet({id:item.ref.id,name:"Info Warga",desc:item.ref.note || "Info titik",fungsi:"Kategori: " + reportEmoji(item.ref.category),tupoksi:"Titik laporan dari user.",group:"CITIZEN REPORT",aktif:true}, "manual");
