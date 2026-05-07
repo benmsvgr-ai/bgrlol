@@ -32,6 +32,10 @@ const state = {
   deviceHeadingEnabled: false,
   deviceHeadingBearing: null,
   deviceHeadingLastAt: 0,
+  deviceHeadingRaw: null,
+  deviceHeadingSmooth: null,
+  headingCameraLastAt: 0,
+  lastCameraCenter: null,
   compassRequested: false,
   lastPoi: null,
   discovered: new Set(),
@@ -438,9 +442,13 @@ function darken(hex, amount){
   return `rgb(${mix(r)},${mix(g)},${mix(b)})`;
 }
 
-const CAMERA_PITCH = 74;
-const CAMERA_ZOOM = 18.45;
-const CAMERA_AHEAD_METERS = 210;
+const CAMERA_PITCH = 73;
+const CAMERA_ZOOM = 18.25;
+// Jangan terlalu jauh: kalau terlalu besar karakter terdorong ke bawah dan hilang di balik UI.
+const CAMERA_AHEAD_METERS = 122;
+const CAMERA_FOLLOW_MIN_MS = 210;
+const HEADING_DEADBAND_DEG = 2.8;
+const HEADING_SMOOTH_ALPHA = 0.075;
 function degToRad(d){ return d * Math.PI / 180; }
 function getCameraBearing(){
   if(state.deviceHeadingEnabled && typeof state.deviceHeadingBearing === "number") return state.deviceHeadingBearing;
@@ -453,22 +461,38 @@ function getScreenOrientationAngle(){
   if(typeof window.orientation === "number") return window.orientation || 0;
   return 0;
 }
-function applyDeviceHeadingToCamera(heading, duration=80){
+function shortestHeadingDiff(target, current){
+  return ((target - current + 540) % 360) - 180;
+}
+function applyDeviceHeadingToCamera(heading, duration=240){
   heading = normalizeHeading(heading);
   if(heading === null) return;
-  state.deviceHeadingBearing = heading;
+  state.deviceHeadingRaw = heading;
   state.deviceHeadingEnabled = true;
   state.deviceHeadingLastAt = Date.now();
-  if(map){
-    const payload = { center: cameraCenterAhead(), zoom: CAMERA_ZOOM, pitch: CAMERA_PITCH, bearing: heading, duration, easing:t=>t };
-    if(duration) map.easeTo(payload);
-    else map.jumpTo(payload);
+
+  // Sensor kompas Android sering noise. Ini dibuat seperti Google Maps:
+  // perubahan kecil diabaikan, perubahan besar dikejar pelan.
+  if(typeof state.deviceHeadingSmooth !== "number"){
+    state.deviceHeadingSmooth = heading;
+  }else{
+    const diff = shortestHeadingDiff(heading, state.deviceHeadingSmooth);
+    if(Math.abs(diff) < HEADING_DEADBAND_DEG) return;
+    state.deviceHeadingSmooth = normalizeHeading(state.deviceHeadingSmooth + diff * HEADING_SMOOTH_ALPHA);
+  }
+  state.deviceHeadingBearing = state.deviceHeadingSmooth;
+
+  const now = performance.now();
+  if(now - (state.headingCameraLastAt || 0) < CAMERA_FOLLOW_MIN_MS) return;
+  state.headingCameraLastAt = now;
+  if(map && !state.browsing){
+    followPlayerCamera({ bearing: state.deviceHeadingBearing, duration });
   }
 }
-function cameraCenterAhead(){
-  const b = getCameraBearing();
+function cameraCenterAhead(bearing){
+  const b = typeof bearing === "number" ? bearing : getCameraBearing();
   const rad = degToRad(b);
-  // bearing 0 = map menghadap utara. Center digeser ke depan supaya karakter terlihat di bawah layar.
+  // Center digeser ke depan sedikit supaya karakter tetap terlihat di bawah-tengah, bukan hilang di bawah UI.
   const mx = Math.sin(rad) * CAMERA_AHEAD_METERS;
   const my = Math.cos(rad) * CAMERA_AHEAD_METERS;
   const [dLng,dLat] = metersToLngLatOffset(mx, my, state.playerWorld[1]);
@@ -476,10 +500,12 @@ function cameraCenterAhead(){
 }
 function followPlayerCamera(opts={}){
   if(!map) return;
-  const bearing = typeof opts.bearing === "number" ? opts.bearing : getCameraBearing();
-  const zoom = typeof opts.zoom === "number" ? opts.zoom : Math.max(CAMERA_ZOOM, map.getZoom());
-  const payload = { center: cameraCenterAhead(), zoom, pitch: CAMERA_PITCH, bearing };
-  if(opts.duration) map.easeTo({ ...payload, duration: opts.duration, easing:t=>t });
+  const bearing = typeof opts.bearing === "number" ? normalizeHeading(opts.bearing) : getCameraBearing();
+  const zoom = typeof opts.zoom === "number" ? opts.zoom : CAMERA_ZOOM;
+  const center = cameraCenterAhead(bearing);
+  const payload = { center, zoom, pitch: CAMERA_PITCH, bearing };
+  state.lastCameraCenter = center;
+  if(opts.duration) map.easeTo({ ...payload, duration: opts.duration, easing:t=>(1 - Math.pow(1-t, 3)) });
   else map.jumpTo(payload);
 }
 function lockPitchOnly(){
@@ -908,12 +934,7 @@ function handleDeviceOrientation(ev){
   }
   heading = normalizeHeading(heading);
   if(heading === null) return;
-  // smoothing ringan supaya kamera tidak gemetar saat sensor HP berubah kecil-kecil
-  if(typeof state.deviceHeadingBearing === "number"){
-    let diff = ((heading - state.deviceHeadingBearing + 540) % 360) - 180;
-    heading = normalizeHeading(state.deviceHeadingBearing + diff * 0.24);
-  }
-  applyDeviceHeadingToCamera(heading, 70);
+  applyDeviceHeadingToCamera(heading, 260);
 }
 async function requestDeviceCompass(){
   if(state.compassRequested) return;
@@ -1118,7 +1139,7 @@ function updateMovement(dt=1/60){
   if(!playerSprite().classList.contains("walk") || state.facing !== facing) setPlayerAnim("walk", facing);
   if(moved){
     updatePlayerMapMarker();
-    if(!state.browsing){ followPlayerCamera(); }
+    if(!state.browsing){ followPlayerCamera({ duration: 120 }); }
     detectNearby();
   }else{
     updateStatus("Jalur tertutup • karakter hanya bisa jalan di lintasan");
@@ -1162,11 +1183,11 @@ map.on("load", () => {
   followPlayerCamera({ zoom: CAMERA_ZOOM });
   lockPitchOnly();
   document.getElementById("sheetContent").innerHTML = `
-    <h3>BogorDex GO v40 Compass Quest</h3>
+    <h3>BogorDex GO v42 Smooth Compass</h3>
     <p>MapLibre street-anime mode: kamera lebih rendah seperti berdiri di jalan, rotate kiri-kanan aktif, pitch atas-bawah dikunci, gedung transparan, dan karakter tetap road-only.</p>
     <div class="section"><div class="section-title">Fix Inti</div><p>Basis MapLibre tetap dipakai tanpa kartu kredit Mapbox. Nuansa dibuat lebih game HP/Pokemon GO: gedung ghost transparan, kamera dari belakang karakter, MapDex phone aktif, dan laporan titik tetap jalan.</p></div>
   `;
-  state.lastPoi = {id:"intro",name:"BogorDex GO v40 Compass Quest",desc:"Mode street-anime MapDex road-only dengan kamera lebih luas ke depan.",fungsi:"Dekati portal/NPC untuk quest, rotate/tilt map, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Firebase/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
+  state.lastPoi = {id:"intro",name:"BogorDex GO v42 Smooth Compass",desc:"Mode street-anime MapDex road-only dengan kamera lebih luas ke depan.",fungsi:"Dekati portal/NPC untuk quest, rotate/tilt map, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Firebase/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
   syncMiniButton();
   loadUserReports();
   renderUserReports();
@@ -1206,8 +1227,10 @@ function loop(now){
   updateMovement(dt);
   animatePortalRings();
   updateNpcNearState();
-  if(state.deviceHeadingEnabled && Date.now() - state.deviceHeadingLastAt < 2500 && !state.browsing){
-    followPlayerCamera({ duration: 60 });
+  // Kamera kompas sudah di-throttle di applyDeviceHeadingToCamera.
+  // Jangan follow tiap frame, karena itu bikin pandangan geter-geter.
+  if(!state.browsing && !state.move.up && !state.move.down && !state.move.left && !state.move.right){
+    // keep alive ringan supaya karakter tetap terlihat setelah tile/render selesai
   }
   requestAnimationFrame(loop);
 }
