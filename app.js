@@ -202,30 +202,35 @@ function updateNpcNearState(){
 }
 
 function setPlayerAnim(mode, facing){
-  const el = playerSprite();
-  if(!el) return;
   if(facing) state.facing = facing;
   state.playerMode = mode || "idle";
-  el.classList.remove("idle","walk","run","face-down","face-up","face-left","face-right");
-  el.classList.add(state.playerMode);
-  el.classList.add("face-" + (state.facing || "down"));
+  const els = playerSpriteEls();
+  if(!els.length) return;
+  els.forEach(el => {
+    el.classList.remove("idle","walk","run","face-down","face-up","face-left","face-right");
+    el.classList.add(state.playerMode);
+    el.classList.add("face-" + (state.facing || "down"));
+  });
   applyPlayerSpriteFrame();
 }
 
 function applyPlayerSpriteFrame(){
-  const el = playerSprite();
-  if(!el) return;
-  const fw = 97.5;
-  const fh = 97.5;
-  const facingCols = { down:0, up:1, right:2, left:3 };
+  const els = playerSpriteEls();
+  if(!els.length) return;
+  const fw = 104;
+  const fh = 104;
+  // Kolom sprite sheet: depan, belakang, samping. Arah kanan pakai flip CSS.
+  const facingCols = { down:0, up:1, left:2, right:2 };
   const facing = state.facing || "down";
   let row = 0;
   if(state.playerMode === "walk" || state.playerMode === "run"){
     row = state.playerStepFrame ? 2 : 1;
   }
   const col = facingCols[facing] ?? 0;
-  el.style.setProperty("--sprite-x", (-col * fw) + "px");
-  el.style.setProperty("--sprite-y", (-row * fh) + "px");
+  els.forEach(el => {
+    el.style.setProperty("--sprite-x", (-col * fw) + "px");
+    el.style.setProperty("--sprite-y", (-row * fh) + "px");
+  });
 }
 
 function createPlayerMapMarker(){
@@ -1183,11 +1188,11 @@ map.on("load", () => {
   followPlayerCamera({ zoom: CAMERA_ZOOM });
   lockPitchOnly();
   document.getElementById("sheetContent").innerHTML = `
-    <h3>BogorDex GO v42 Smooth Compass</h3>
+    <h3>BogorDex GO v43 Player Visible</h3>
     <p>MapLibre street-anime mode: kamera lebih rendah seperti berdiri di jalan, rotate kiri-kanan aktif, pitch atas-bawah dikunci, gedung transparan, dan karakter tetap road-only.</p>
     <div class="section"><div class="section-title">Fix Inti</div><p>Basis MapLibre tetap dipakai tanpa kartu kredit Mapbox. Nuansa dibuat lebih game HP/Pokemon GO: gedung ghost transparan, kamera dari belakang karakter, MapDex phone aktif, dan laporan titik tetap jalan.</p></div>
   `;
-  state.lastPoi = {id:"intro",name:"BogorDex GO v42 Smooth Compass",desc:"Mode street-anime MapDex road-only dengan kamera lebih luas ke depan.",fungsi:"Dekati portal/NPC untuk quest, rotate/tilt map, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Firebase/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
+  state.lastPoi = {id:"intro",name:"BogorDex GO v43 Player Visible",desc:"Mode street-anime MapDex road-only dengan kamera lebih luas ke depan.",fungsi:"Dekati portal/NPC untuk quest, rotate/tilt map, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Firebase/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
   syncMiniButton();
   loadUserReports();
   renderUserReports();
