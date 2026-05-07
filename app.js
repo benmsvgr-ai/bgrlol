@@ -10,7 +10,7 @@ const state = {
   hasRealGps: false,
   geoWatch: null,
   move: { up:false, down:false, left:false, right:false },
-  moveSpeedMeters: 58.0,
+  moveSpeedMeters: 72.0,
   playerMarker: null,
   playerMarkerEl: null,
   playerFrameTick: 0,
@@ -26,6 +26,13 @@ const state = {
   activePoiId: null,
   activePoiMode: null,
   activeQuestPoiId: null,
+  portalNoticeRadiusMeters: 62,
+  portalSeenIds: new Set(),
+  portalDismissedIds: new Set(),
+  deviceHeadingEnabled: false,
+  deviceHeadingBearing: null,
+  deviceHeadingLastAt: 0,
+  compassRequested: false,
   lastPoi: null,
   discovered: new Set(),
   layers: { transit:true, gov:true, health:true, umkm:true },
@@ -407,8 +414,12 @@ const CAMERA_PITCH = 74;
 const CAMERA_ZOOM = 18.45;
 const CAMERA_AHEAD_METERS = 210;
 function degToRad(d){ return d * Math.PI / 180; }
+function getCameraBearing(){
+  if(state.deviceHeadingEnabled && typeof state.deviceHeadingBearing === "number") return state.deviceHeadingBearing;
+  return map && typeof map.getBearing === "function" ? map.getBearing() : 0;
+}
 function cameraCenterAhead(){
-  const b = map && typeof map.getBearing === "function" ? map.getBearing() : 0;
+  const b = getCameraBearing();
   const rad = degToRad(b);
   // bearing 0 = map menghadap utara. Center digeser ke depan supaya karakter terlihat di bawah layar.
   const mx = Math.sin(rad) * CAMERA_AHEAD_METERS;
@@ -418,7 +429,7 @@ function cameraCenterAhead(){
 }
 function followPlayerCamera(opts={}){
   if(!map) return;
-  const bearing = typeof opts.bearing === "number" ? opts.bearing : map.getBearing();
+  const bearing = typeof opts.bearing === "number" ? opts.bearing : getCameraBearing();
   const zoom = typeof opts.zoom === "number" ? opts.zoom : Math.max(CAMERA_ZOOM, map.getZoom());
   const payload = { center: cameraCenterAhead(), zoom, pitch: CAMERA_PITCH, bearing };
   if(opts.duration) map.easeTo({ ...payload, duration: opts.duration, easing:t=>t });
@@ -718,6 +729,7 @@ function setupPoiLayers(){
     const poi = state.pois.find(p => p.id === feature.properties.id);
     if(!poi) return;
     state.discovered.add(poi.id);
+    state.portalDismissedIds.add(poi.id);
     renderDex();
     openSheet(poi, "manual");
   });
@@ -748,6 +760,8 @@ function questPopupEl(){ return document.getElementById("questPopup"); }
 function showQuestPopup(poi, dist){
   const el = questPopupEl();
   if(!el || state.activeQuestPoiId === poi.id) return;
+  if(state.portalDismissedIds.has(poi.id) || state.portalSeenIds.has(poi.id)) return;
+  state.portalSeenIds.add(poi.id);
   state.activeQuestPoiId = poi.id;
   state.lastPoi = poi;
   document.getElementById("questPortalName").textContent = poi.name;
@@ -759,16 +773,19 @@ function showQuestPopup(poi, dist){
   void el.offsetWidth;
   el.classList.add("quest-pop");
 }
-function hideQuestPopup(){
+function hideQuestPopup(markDismissed=false){
+  if(markDismissed && state.activeQuestPoiId) state.portalDismissedIds.add(state.activeQuestPoiId);
   const el = questPopupEl();
   if(el) el.classList.add("hidden");
   state.activeQuestPoiId = null;
 }
+function dismissActiveQuestPopup(){ hideQuestPopup(true); }
 function startQuestFromPopup(){
   if(!state.lastPoi) return;
   state.discovered.add(state.lastPoi.id);
   renderDex();
-  hideQuestPopup();
+  if(state.lastPoi && state.lastPoi.id) state.portalDismissedIds.add(state.lastPoi.id);
+  hideQuestPopup(true);
   openSheet(state.lastPoi, "manual");
   updateStatus("Quest dibuka: " + state.lastPoi.name);
 }
@@ -793,14 +810,14 @@ function updateNearestHighlight(){
 }
 function detectNearby(){
   updateNearestHighlight();
-  const hit = nearestPoiWithin(state.playerWorld, 240);
+  const hit = nearestPoiWithin(state.playerWorld, state.portalNoticeRadiusMeters);
   if(hit){
     state.discovered.add(hit.poi.id);
     renderDex();
     showQuestPopup(hit.poi, hit.dist);
     updateStatus("Portal terdeteksi: " + hit.poi.name);
   } else {
-    hideQuestPopup();
+    hideQuestPopup(false);
     if(state.activePoiMode === "auto") closeSheet(true, true);
     updateStatus(state.hasRealGps ? "Lokasi aktif" : "Lokasi simulasi");
   }
@@ -823,7 +840,46 @@ async function loadSheetData(){
   renderNPCs();
   updateStatus(`Mode game aktif • ${state.pois.length} portal`);
 }
+function normalizeHeading(value){
+  let n = Number(value);
+  if(!Number.isFinite(n)) return null;
+  n = ((n % 360) + 360) % 360;
+  return n;
+}
+function handleDeviceOrientation(ev){
+  let heading = null;
+  if(typeof ev.webkitCompassHeading === "number") heading = ev.webkitCompassHeading;
+  else if(ev.absolute === true && typeof ev.alpha === "number") heading = 360 - ev.alpha;
+  else if(typeof ev.alpha === "number") heading = 360 - ev.alpha;
+  heading = normalizeHeading(heading);
+  if(heading === null) return;
+  // smoothing ringan supaya kamera tidak gemetar saat sensor HP berubah kecil-kecil
+  if(typeof state.deviceHeadingBearing === "number"){
+    let diff = ((heading - state.deviceHeadingBearing + 540) % 360) - 180;
+    heading = normalizeHeading(state.deviceHeadingBearing + diff * 0.18);
+  }
+  state.deviceHeadingBearing = heading;
+  state.deviceHeadingEnabled = true;
+  state.deviceHeadingLastAt = Date.now();
+  if(!state.browsing) followPlayerCamera({ bearing: heading, duration: 80 });
+}
+async function requestDeviceCompass(){
+  if(state.compassRequested) return;
+  state.compassRequested = true;
+  try{
+    if(window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === "function"){
+      const res = await DeviceOrientationEvent.requestPermission();
+      if(res !== "granted"){ updateStatus("Kompas HP belum diizinkan"); return; }
+    }
+    window.addEventListener("deviceorientationabsolute", handleDeviceOrientation, true);
+    window.addEventListener("deviceorientation", handleDeviceOrientation, true);
+    updateStatus("Kompas HP aktif • pandangan mengikuti arah HP");
+  }catch(err){
+    console.warn("Compass unavailable", err);
+  }
+}
 function startLocation(){
+  requestDeviceCompass();
   if(!navigator.geolocation){ updateStatus("Browser tidak mendukung lokasi"); return; }
   updateStatus("Mengambil lokasi…");
   if(state.geoWatch !== null) navigator.geolocation.clearWatch(state.geoWatch);
@@ -980,7 +1036,7 @@ function updateMovement(dt=1/60){
   // V38: gerak karakter mengikuti arah kamera, bukan utara/selatan absolut.
   // Jadi saat map di-rotate kiri/kanan, tombol atas tetap berarti maju ke depan layar.
   const step = state.moveSpeedMeters * Math.min(0.033, Math.max(0.008, dt));
-  const bearingRad = degToRad(map && typeof map.getBearing === "function" ? map.getBearing() : 0);
+  const bearingRad = degToRad(getCameraBearing());
   const forwardX = Math.sin(bearingRad);
   const forwardY = Math.cos(bearingRad);
   const rightX = Math.cos(bearingRad);
@@ -1047,11 +1103,11 @@ map.on("load", () => {
   followPlayerCamera({ zoom: CAMERA_ZOOM });
   lockPitchOnly();
   document.getElementById("sheetContent").innerHTML = `
-    <h3>BogorDex GO v38 Street Anime</h3>
+    <h3>BogorDex GO v40 Compass Quest</h3>
     <p>MapLibre street-anime mode: kamera lebih rendah seperti berdiri di jalan, rotate kiri-kanan aktif, pitch atas-bawah dikunci, gedung transparan, dan karakter tetap road-only.</p>
     <div class="section"><div class="section-title">Fix Inti</div><p>Basis MapLibre tetap dipakai tanpa kartu kredit Mapbox. Nuansa dibuat lebih game HP/Pokemon GO: gedung ghost transparan, kamera dari belakang karakter, MapDex phone aktif, dan laporan titik tetap jalan.</p></div>
   `;
-  state.lastPoi = {id:"intro",name:"BogorDex GO v38 Street Anime",desc:"Mode street-anime MapDex road-only dengan kamera lebih luas ke depan.",fungsi:"Dekati portal/NPC untuk quest, rotate/tilt map, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Firebase/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
+  state.lastPoi = {id:"intro",name:"BogorDex GO v40 Compass Quest",desc:"Mode street-anime MapDex road-only dengan kamera lebih luas ke depan.",fungsi:"Dekati portal/NPC untuk quest, rotate/tilt map, atau tambah laporan titik dari menu utama.",tupoksi:"Laporan user tersimpan lokal dulu dan siap disambungkan ke Firebase/GAS pada versi berikutnya.",group:"SISTEM",aktif:true};
   syncMiniButton();
   loadUserReports();
   renderUserReports();
@@ -1091,6 +1147,9 @@ function loop(now){
   updateMovement(dt);
   animatePortalRings();
   updateNpcNearState();
+  if(state.deviceHeadingEnabled && Date.now() - state.deviceHeadingLastAt < 2500 && !state.browsing){
+    followPlayerCamera({ duration: 60 });
+  }
   requestAnimationFrame(loop);
 }
 
@@ -1156,12 +1215,14 @@ function scanNearestFromMenu(){
   const hit = nearestPoiWithin(state.playerWorld, 999999);
   if(!hit){ updateStatus('Belum ada titik untuk discan'); return; }
   state.discovered.add(hit.poi.id);
+  state.portalDismissedIds.add(hit.poi.id);
   renderDex();
-  map.easeTo({center: hit.poi.coords, zoom: 18.2, pitch: CAMERA_PITCH, bearing: map.getBearing(), duration: 450});
+  map.easeTo({center: hit.poi.coords, zoom: 18.2, pitch: CAMERA_PITCH, bearing: getCameraBearing(), duration: 450});
   openSheet(hit.poi, 'manual');
   updateStatus('Scan menemukan: ' + hit.poi.name);
 }
 function resetGameCamera(){
+  requestDeviceCompass();
   state.browsing = false;
   if(state.snapTimer) clearTimeout(state.snapTimer);
   state.browsing = false; document.getElementById("app")?.classList.remove("app-browsing"); followPlayerCamera({ zoom: CAMERA_ZOOM, duration: 320 });
@@ -1177,8 +1238,8 @@ function getMapDexItems(){
 }
 function focusMapDexItem(item){
   closeMapDex();
-  map.easeTo({ center:item.coords, zoom:18.25, pitch:CAMERA_PITCH, bearing:map.getBearing(), duration:450 });
-  if(item.type === "portal" && item.ref) openSheet(item.ref, "manual");
+  map.easeTo({ center:item.coords, zoom:18.25, pitch:CAMERA_PITCH, bearing:getCameraBearing(), duration:450 });
+  if(item.type === "portal" && item.ref){ state.portalDismissedIds.add(item.ref.id); openSheet(item.ref, "manual"); }
   if(item.type === "npc" && item.ref) openNpcDialog(item.ref.id);
   if(item.type === "report" && item.ref){
     openSheet({id:item.ref.id,name:"Info Warga",desc:item.ref.note || "Info titik",fungsi:"Kategori: " + reportEmoji(item.ref.category),tupoksi:"Titik laporan dari user.",group:"CITIZEN REPORT",aktif:true}, "manual");
@@ -1223,6 +1284,7 @@ function renderMapDex(){
 }
 
 document.getElementById("locateBtn").addEventListener("click", startLocation);
+document.addEventListener("pointerdown", requestDeviceCompass, { once:true, passive:true });
 document.getElementById("resetViewBtn").addEventListener("click", resetGameCamera);
 document.getElementById("toggleTransitBtn").addEventListener("click", (e) => { e.currentTarget.classList.toggle("active"); state.layers.transit = e.currentTarget.classList.contains("active"); applyLayerFilters(); });
 document.getElementById("toggleGovBtn").addEventListener("click", (e) => { e.currentTarget.classList.toggle("active"); state.layers.gov = e.currentTarget.classList.contains("active"); applyLayerFilters(); });
@@ -1245,7 +1307,7 @@ document.getElementById("npcDialogClose").addEventListener("click", closeNpcDial
 document.getElementById("npcDialogLaterBtn").addEventListener("click", closeNpcDialog);
 document.getElementById("npcDialogQuestBtn").addEventListener("click", acceptNpcQuest);
 document.getElementById("npcDialog").addEventListener("click", (e) => { if(e.target.id === "npcDialog") closeNpcDialog(); });
-document.getElementById("questCloseBtn").addEventListener("click", hideQuestPopup);
+document.getElementById("questCloseBtn").addEventListener("click", dismissActiveQuestPopup);
 document.getElementById("mapDexBtn").addEventListener("click", openMapDex);
 document.getElementById("closeMapDexBtn").addEventListener("click", closeMapDex);
 document.getElementById("mapDexModal").addEventListener("click", (e) => { if(e.target.id === "mapDexModal") closeMapDex(); });
