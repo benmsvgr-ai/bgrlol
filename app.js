@@ -34,6 +34,9 @@ const state = {
   deviceHeadingLastAt: 0,
   deviceHeadingRaw: null,
   deviceHeadingSmooth: null,
+  gpsSmoothBase: null,
+  gpsLastAcceptedAt: 0,
+  gpsLastAccuracy: null,
   headingCameraLastAt: 0,
   lastCameraCenter: null,
   compassRequested: false,
@@ -218,8 +221,8 @@ function applyPlayerSpriteFrame(){
   // Sprite utama 4x4: baris = arah, kolom = frame langkah.
   // Ini sengaja dibuat pakai background-position manual supaya karakter tidak hilang
   // dan tidak ikut muter saat map/kompas berputar.
-  const fw = 104;
-  const fh = 104;
+  const fw = 125;
+  const fh = 125;
   const facingRows = { down:0, left:1, right:2, up:3 };
   const facing = state.facing || "down";
   const row = facingRows[facing] ?? 0;
@@ -446,9 +449,9 @@ const CAMERA_PITCH = 73;
 const CAMERA_ZOOM = 18.25;
 // Jangan terlalu jauh: kalau terlalu besar karakter terdorong ke bawah dan hilang di balik UI.
 const CAMERA_AHEAD_METERS = 122;
-const CAMERA_FOLLOW_MIN_MS = 210;
-const HEADING_DEADBAND_DEG = 2.8;
-const HEADING_SMOOTH_ALPHA = 0.075;
+const CAMERA_FOLLOW_MIN_MS = 420;
+const HEADING_DEADBAND_DEG = 7.5;
+const HEADING_SMOOTH_ALPHA = 0.045;
 function degToRad(d){ return d * Math.PI / 180; }
 function getCameraBearing(){
   if(state.deviceHeadingEnabled && typeof state.deviceHeadingBearing === "number") return state.deviceHeadingBearing;
@@ -952,6 +955,76 @@ async function requestDeviceCompass(){
     console.warn("Compass unavailable", err);
   }
 }
+
+function metersBetweenCoords(a, b){
+  if(!a || !b) return Infinity;
+  return haversineMeters(a, b);
+}
+function nearestPointOnScreenLine(point, coords){
+  if(!coords || coords.length < 2) return null;
+  const p = map.project(point);
+  let best = null;
+  let bestD2 = Infinity;
+  for(let i=0;i<coords.length-1;i++){
+    const a = map.project(coords[i]);
+    const b = map.project(coords[i+1]);
+    const vx = b.x - a.x, vy = b.y - a.y;
+    const wx = p.x - a.x, wy = p.y - a.y;
+    const len2 = vx*vx + vy*vy;
+    if(!len2) continue;
+    const t = Math.max(0, Math.min(1, (wx*vx + wy*vy) / len2));
+    const x = a.x + vx*t, y = a.y + vy*t;
+    const d2 = (p.x-x)*(p.x-x) + (p.y-y)*(p.y-y);
+    if(d2 < bestD2){ bestD2 = d2; best = map.unproject([x,y]).toArray(); }
+  }
+  return best ? { coord: best, d2: bestD2 } : null;
+}
+function getLineCoordinatesFromFeature(feature){
+  const geom = feature && feature.geometry;
+  if(!geom) return [];
+  if(geom.type === 'LineString') return [geom.coordinates];
+  if(geom.type === 'MultiLineString') return geom.coordinates || [];
+  return [];
+}
+function snapCoordToNearestRoad(coord, radiusPx=92){
+  if(!map || !map.loaded || !map.loaded()) return coord;
+  const layers = getRoadCollisionLayers().filter(id => map.getLayer(id));
+  if(!layers.length) return coord;
+  const features = queryFeaturesAround(coord, layers, radiusPx);
+  if(!features.length) return coord;
+  let best = null;
+  for(const f of features){
+    const lines = getLineCoordinatesFromFeature(f);
+    for(const line of lines){
+      const hit = nearestPointOnScreenLine(coord, line);
+      if(hit && (!best || hit.d2 < best.d2)) best = hit;
+    }
+  }
+  return best && best.coord ? best.coord : coord;
+}
+function smoothGpsCoord(nextCoord, accuracyMeters=20){
+  const now = Date.now();
+  const snapped = snapCoordToNearestRoad(nextCoord, 110);
+  if(!state.gpsSmoothBase){
+    state.gpsSmoothBase = snapped;
+    state.gpsLastAcceptedAt = now;
+    state.gpsLastAccuracy = accuracyMeters;
+    return snapped;
+  }
+  const d = haversineMeters(state.gpsSmoothBase, snapped);
+  const jitterGate = Math.max(1.8, Math.min(8, (accuracyMeters || 20) * 0.18));
+  if(d < jitterGate){
+    return state.gpsSmoothBase;
+  }
+  const dt = Math.max(0.016, Math.min(2.0, (now - (state.gpsLastAcceptedAt || now)) / 1000));
+  const alpha = Math.max(0.08, Math.min(0.32, dt * (d > 18 ? 0.7 : 0.35)));
+  const lng = state.gpsSmoothBase[0] + (snapped[0] - state.gpsSmoothBase[0]) * alpha;
+  const lat = state.gpsSmoothBase[1] + (snapped[1] - state.gpsSmoothBase[1]) * alpha;
+  state.gpsSmoothBase = snapCoordToNearestRoad([lng, lat], 95);
+  state.gpsLastAcceptedAt = now;
+  state.gpsLastAccuracy = accuracyMeters;
+  return state.gpsSmoothBase;
+}
 function startLocation(){
   requestDeviceCompass();
   if(!navigator.geolocation){ updateStatus("Browser tidak mendukung lokasi"); return; }
@@ -960,16 +1033,20 @@ function startLocation(){
   state.geoWatch = navigator.geolocation.watchPosition(
     (pos) => {
       state.hasRealGps = true;
-      state.gpsBase = [pos.coords.longitude, pos.coords.latitude];
+      const rawGps = [pos.coords.longitude, pos.coords.latitude];
+      const accuracy = pos.coords && Number.isFinite(pos.coords.accuracy) ? pos.coords.accuracy : 20;
+      const beforeWorld = state.playerWorld ? [state.playerWorld[0], state.playerWorld[1]] : null;
+      state.gpsBase = smoothGpsCoord(rawGps, accuracy);
       clampOffset();
       recomputePlayerWorld();
+      const movedMeters = beforeWorld ? haversineMeters(beforeWorld, state.playerWorld) : Infinity;
       if(pos.coords && Number.isFinite(pos.coords.heading)){
         // Fallback: kalau sensor kompas browser tidak aktif, pakai arah gerak GPS.
         if(!state.deviceHeadingEnabled && (pos.coords.speed || 0) > 0.6){
           applyDeviceHeadingToCamera(pos.coords.heading, 180);
         }
       }
-      if(!state.browsing) followPlayerCamera({ duration:250 });
+      if(!state.browsing && movedMeters > 1.2) followPlayerCamera({ duration:420 });
       detectNearby();
       updateStatus(state.deviceHeadingEnabled ? "Lokasi aktif • kompas aktif" : "Lokasi aktif");
     },
@@ -1097,7 +1174,7 @@ function tryMoveWithCollision(mx, my){
     if(canPlayerStandAt(nextCoord)){
       state.offsetMeters.x = tx;
       state.offsetMeters.y = ty;
-      state.playerWorld = nextCoord;
+      state.playerWorld = snapCoordToNearestRoad(nextCoord, state.roadRadiusPx || 42);
       return true;
     }
   }
@@ -1156,6 +1233,12 @@ function bindMoveButton(btn){
   btn.addEventListener("touchend", up);
 }
 
+function updateZoomFog(){
+  const app = document.getElementById("app");
+  if(!app || !map) return;
+  app.classList.toggle("app-max-zoom", map.getZoom() >= 19.25);
+}
+
 map.on("load", () => {
   setupMapLibre3D();
   map.addSource("route-k5",{type:"geojson",data:routeFeatures.k5});
@@ -1193,13 +1276,15 @@ map.on("load", () => {
   renderUserReports();
   renderNPCs();
   loadSheetData();
+  updateZoomFog();
   requestAnimationFrame(loop);
 });
 
 map.on("dragstart", startBrowse);
 map.on("dragend", stopBrowse);
 map.on("zoomstart", startBrowse);
-map.on("zoomend", stopBrowse);
+map.on("zoom", updateZoomFog);
+map.on("zoomend", () => { updateZoomFog(); stopBrowse(); });
 map.on("rotatestart", startBrowse);
 map.on("rotateend", stopBrowse);
 map.on("pitchstart", () => { startBrowse(); setTimeout(lockPitchOnly, 30); });
