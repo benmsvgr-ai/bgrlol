@@ -51,38 +51,38 @@ html,body,#app{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-fa
 .dex-summary{display:flex;gap:10px;margin-bottom:14px}.dex-stat{flex:1;padding:12px;border-radius:18px;background:linear-gradient(180deg,#ffffff,#f7fbff);border:1px solid #dbe6f3;color:#1a3154}.dex-stat strong{display:block;font-size:24px}.dex-stat span{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#64748b}
 .dex-grid{display:grid;grid-template-columns:1fr;gap:12px}.dex-card{padding:14px 14px 16px;border-radius:20px;background:linear-gradient(180deg,#ffffff,#f7fbff);border:1px solid #dbe6f3}.dex-card.locked{opacity:.48;filter:grayscale(1)}.dex-card h4{margin:0 0 8px;font-size:18px;color:#14253f}.dex-card p{margin:0;color:#55667d;line-height:1.5}
 @media (max-width: 720px){
-  .top-status{top:10px;max-width:calc(100vw - 132px);min-width:0}
-  .status-title{font-size:22px}
-  .pill{min-width:106px;padding:11px 14px;font-size:14px}
-  .fab-locate{bottom:206px}
-  .bottom-left-profile{left:10px;bottom:18px;transform:scale(.98);transform-origin:left bottom}
-  .move-pad{left:10px;bottom:116px;transform:scale(.98);transform-origin:left bottom}
-  .dex-action{right:12px;bottom:34px}
-  .main-action{width:88px;height:88px;bottom:18px}
-  .scan-ring{width:min(48vw,240px);height:min(48vw,240px)}
-  .sheet-mini-btn{right:12px;bottom:98px;padding:10px 14px;font-size:13px}
-  .bottom-sheet.collapsed{transform:translateY(calc(100% - 24px))}
+.top-status{top:10px;max-width:calc(100vw - 132px);min-width:0}
+.status-title{font-size:22px}
+.pill{min-width:106px;padding:11px 14px;font-size:14px}
+.fab-locate{bottom:206px}
+.bottom-left-profile{left:10px;bottom:18px;transform:scale(.98);transform-origin:left bottom}
+.move-pad{left:10px;bottom:116px;transform:scale(.98);transform-origin:left bottom}
+.dex-action{right:12px;bottom:34px}
+.main-action{width:88px;height:88px;bottom:18px}
+.scan-ring{width:min(48vw,240px);height:min(48vw,240px)}
+.sheet-mini-btn{right:12px;bottom:98px;padding:10px 14px;font-size:13px}
+.bottom-sheet.collapsed{transform:translateY(calc(100% - 24px))}
 }
 
 
 /* ===== V25 walk bebas + karakter tidak muter saat idle ===== */
 .scan-ring{
-  width:min(46vw,282px);
-  height:min(46vw,282px);
+width:min(46vw,282px);
+height:min(46vw,282px);
 }
 .player-anchor{
-  width:116px;
-  height:128px;
+width:116px;
+height:128px;
 }
 .player-sprite{
-  width:104px;
-  height:104px;
-  background-size:416px 416px;
-  background-position:0 0;
-  image-rendering:auto;
+width:104px;
+height:104px;
+background-size:416px 416px;
+background-position:0 0;
+image-rendering:auto;
 }
 .player-sprite.idle{
-  animation:none !important;
+animation:none !important;
 }
 .player-sprite.idle.face-down{background-position:0 0;transform:none}
 .player-sprite.idle.face-up{background-position:-104px 0;transform:none}
@@ -96,169 +96,169 @@ html,body,#app{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-fa
 @keyframes sproutWalkUpV25{from{background-position:-208px -104px}to{background-position:-416px -104px}}
 @keyframes sproutWalkSideV25{from{background-position:0 -208px}to{background-position:-208px -208px}}
 .move-pad{
-  box-shadow:0 12px 26px rgba(43,72,135,.24);
+box-shadow:0 12px 26px rgba(43,72,135,.24);
 }
 .move-btn:active{
-  transform:scale(.94);
+transform:scale(.94);
 }
 
 /* ===== V24 BogorDex game-feel + center menu ===== */
 .top-status{
-  background:linear-gradient(180deg, rgba(24,38,97,.88), rgba(23,80,142,.78));
-  border:1px solid rgba(255,255,255,.30);
-  box-shadow:0 20px 44px rgba(41,61,145,.26), inset 0 1px 0 rgba(255,255,255,.22);
+background:linear-gradient(180deg, rgba(24,38,97,.88), rgba(23,80,142,.78));
+border:1px solid rgba(255,255,255,.30);
+box-shadow:0 20px 44px rgba(41,61,145,.26), inset 0 1px 0 rgba(255,255,255,.22);
 }
 .status-title::after{
-  content:"";
-  display:block;
-  width:74px;
-  height:4px;
-  margin:8px auto 0;
-  border-radius:999px;
-  background:linear-gradient(90deg,#ff6db4,#ffd76b,#6be6ff);
-  box-shadow:0 0 18px rgba(255,109,180,.45);
+content:"";
+display:block;
+width:74px;
+height:4px;
+margin:8px auto 0;
+border-radius:999px;
+background:linear-gradient(90deg,#ff6db4,#ffd76b,#6be6ff);
+box-shadow:0 0 18px rgba(255,109,180,.45);
 }
 .scan-ring{
-  border-color:rgba(126,238,255,.92);
-  box-shadow:0 0 0 1px rgba(255,255,255,.20) inset,0 0 36px rgba(84,218,255,.26),0 0 90px rgba(255,109,180,.16);
-  animation:scanBreathV24 2.2s ease-in-out infinite;
+border-color:rgba(126,238,255,.92);
+box-shadow:0 0 0 1px rgba(255,255,255,.20) inset,0 0 36px rgba(84,218,255,.26),0 0 90px rgba(255,109,180,.16);
+animation:scanBreathV24 2.2s ease-in-out infinite;
 }
 @keyframes scanBreathV24{
-  0%,100%{transform:translate(-50%,-50%) scale(.98);opacity:.86}
-  50%{transform:translate(-50%,-50%) scale(1.04);opacity:1}
+0%,100%{transform:translate(-50%,-50%) scale(.98);opacity:.86}
+50%{transform:translate(-50%,-50%) scale(1.04);opacity:1}
 }
 .main-action{
-  width:98px;
-  height:98px;
-  box-shadow:0 18px 38px rgba(255,76,105,.34),0 0 0 10px rgba(255,255,255,.10),0 0 42px rgba(255,215,107,.22);
-  animation:mainPulseV24 1.9s ease-in-out infinite;
+width:98px;
+height:98px;
+box-shadow:0 18px 38px rgba(255,76,105,.34),0 0 0 10px rgba(255,255,255,.10),0 0 42px rgba(255,215,107,.22);
+animation:mainPulseV24 1.9s ease-in-out infinite;
 }
 .main-action::before{
-  content:"MENU";
-  position:absolute;
-  left:50%;
-  bottom:-20px;
-  transform:translateX(-50%);
-  color:#fff;
-  font-size:11px;
-  font-weight:1000;
-  letter-spacing:.13em;
-  text-shadow:0 2px 8px rgba(0,0,0,.45);
+content:"MENU";
+position:absolute;
+left:50%;
+bottom:-20px;
+transform:translateX(-50%);
+color:#fff;
+font-size:11px;
+font-weight:1000;
+letter-spacing:.13em;
+text-shadow:0 2px 8px rgba(0,0,0,.45);
 }
 @keyframes mainPulseV24{
-  0%,100%{transform:translateX(-50%) scale(1)}
-  50%{transform:translateX(-50%) scale(1.05)}
+0%,100%{transform:translateX(-50%) scale(1)}
+50%{transform:translateX(-50%) scale(1.05)}
 }
 .game-menu-modal{
-  position:absolute;
-  inset:0;
-  z-index:80;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
+position:absolute;
+inset:0;
+z-index:80;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:18px;
 }
 .game-menu-modal.hidden{display:none}
 .game-menu-backdrop{
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at 50% 32%, rgba(83,218,255,.20), transparent 36%),linear-gradient(180deg, rgba(7,13,28,.34), rgba(9,18,42,.68));
-  backdrop-filter:blur(12px);
+position:absolute;
+inset:0;
+background:radial-gradient(circle at 50% 32%, rgba(83,218,255,.20), transparent 36%),linear-gradient(180deg, rgba(7,13,28,.34), rgba(9,18,42,.68));
+backdrop-filter:blur(12px);
 }
 .game-menu-card{
-  position:relative;
-  width:min(94vw,560px);
-  max-height:88vh;
-  overflow:auto;
-  border-radius:34px;
-  padding:24px;
-  color:#fff;
-  background:
-    radial-gradient(circle at 15% 10%, rgba(255,109,180,.42), transparent 30%),
-    radial-gradient(circle at 85% 16%, rgba(107,230,255,.34), transparent 34%),
-    linear-gradient(160deg, rgba(26,37,98,.96), rgba(16,73,128,.94) 48%, rgba(25,31,83,.96));
-  border:1px solid rgba(255,255,255,.28);
-  box-shadow:0 30px 80px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.25);
-  animation:menuPopV24 .28s cubic-bezier(.2,1.2,.22,1);
+position:relative;
+width:min(94vw,560px);
+max-height:88vh;
+overflow:auto;
+border-radius:34px;
+padding:24px;
+color:#fff;
+background:
+radial-gradient(circle at 15% 10%, rgba(255,109,180,.42), transparent 30%),
+radial-gradient(circle at 85% 16%, rgba(107,230,255,.34), transparent 34%),
+linear-gradient(160deg, rgba(26,37,98,.96), rgba(16,73,128,.94) 48%, rgba(25,31,83,.96));
+border:1px solid rgba(255,255,255,.28);
+box-shadow:0 30px 80px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.25);
+animation:menuPopV24 .28s cubic-bezier(.2,1.2,.22,1);
 }
 @keyframes menuPopV24{
-  from{opacity:0;transform:translateY(18px) scale(.94)}
-  to{opacity:1;transform:translateY(0) scale(1)}
+from{opacity:0;transform:translateY(18px) scale(.94)}
+to{opacity:1;transform:translateY(0) scale(1)}
 }
 .game-menu-close{
-  position:absolute;
-  right:14px;
-  top:14px;
-  width:42px;
-  height:42px;
-  border:none;
-  border-radius:50%;
-  cursor:pointer;
-  color:#10234b;
-  background:rgba(255,255,255,.92);
-  font-size:28px;
-  font-weight:900;
-  box-shadow:0 10px 22px rgba(0,0,0,.18);
+position:absolute;
+right:14px;
+top:14px;
+width:42px;
+height:42px;
+border:none;
+border-radius:50%;
+cursor:pointer;
+color:#10234b;
+background:rgba(255,255,255,.92);
+font-size:28px;
+font-weight:900;
+box-shadow:0 10px 22px rgba(0,0,0,.18);
 }
 .game-menu-orb{
-  width:72px;
-  height:72px;
-  border-radius:26px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:1000;
-  font-size:22px;
-  background:linear-gradient(145deg,#ff5f9f,#ffd76b 54%,#6be6ff);
-  color:#12224a;
-  border:3px solid rgba(255,255,255,.82);
-  box-shadow:0 16px 36px rgba(255,109,180,.28),0 0 30px rgba(107,230,255,.20);
+width:72px;
+height:72px;
+border-radius:26px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:1000;
+font-size:22px;
+background:linear-gradient(145deg,#ff5f9f,#ffd76b 54%,#6be6ff);
+color:#12224a;
+border:3px solid rgba(255,255,255,.82);
+box-shadow:0 16px 36px rgba(255,109,180,.28),0 0 30px rgba(107,230,255,.20);
 }
 .game-menu-kicker{
-  display:inline-flex;
-  margin-top:16px;
-  padding:7px 12px;
-  border-radius:999px;
-  background:rgba(255,255,255,.13);
-  border:1px solid rgba(255,255,255,.16);
-  font-size:11px;
-  font-weight:1000;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  color:#dff8ff;
+display:inline-flex;
+margin-top:16px;
+padding:7px 12px;
+border-radius:999px;
+background:rgba(255,255,255,.13);
+border:1px solid rgba(255,255,255,.16);
+font-size:11px;
+font-weight:1000;
+letter-spacing:.18em;
+text-transform:uppercase;
+color:#dff8ff;
 }
 .game-menu-card h2{
-  margin:12px 0 8px;
-  font-size:clamp(28px,5vw,42px);
-  line-height:1.02;
-  letter-spacing:-.04em;
+margin:12px 0 8px;
+font-size:clamp(28px,5vw,42px);
+line-height:1.02;
+letter-spacing:-.04em;
 }
 .game-menu-desc{
-  margin:0;
-  color:#e4f6ff;
-  line-height:1.55;
-  font-weight:650;
+margin:0;
+color:#e4f6ff;
+line-height:1.55;
+font-weight:650;
 }
 .game-menu-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:12px;
-  margin-top:18px;
+display:grid;
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:12px;
+margin-top:18px;
 }
 .game-menu-item{
-  min-height:124px;
-  padding:14px;
-  border:none;
-  border-radius:24px;
-  text-align:left;
-  cursor:pointer;
-  color:#17305a;
-  background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(234,246,255,.90));
-  box-shadow:0 14px 28px rgba(0,0,0,.16);
-  transition:transform .16s ease, box-shadow .16s ease;
+min-height:124px;
+padding:14px;
+border:none;
+border-radius:24px;
+text-align:left;
+cursor:pointer;
+color:#17305a;
+background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(234,246,255,.90));
+box-shadow:0 14px 28px rgba(0,0,0,.16);
+transition:transform .16s ease, box-shadow .16s ease;
 }
 .game-menu-item.primary{
-  background:linear-gradient(160deg,#fff3a6,#ff91c0 52%,#8eeeff);
+background:linear-gradient(160deg,#fff3a6,#ff91c0 52%,#8eeeff);
 }
 .game-menu-item:active{transform:scale(.97)}
 .game-menu-item:hover{transform:translateY(-2px);box-shadow:0 18px 34px rgba(0,0,0,.20)}
@@ -266,113 +266,113 @@ html,body,#app{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-fa
 .game-menu-item strong{display:block;font-size:17px;font-weight:1000}
 .game-menu-item small{display:block;margin-top:5px;line-height:1.35;color:#50647e;font-weight:750}
 .game-menu-footer{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:14px;
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin-top:14px;
 }
 .game-menu-footer span{
-  padding:8px 11px;
-  border-radius:999px;
-  background:rgba(255,255,255,.12);
-  border:1px solid rgba(255,255,255,.14);
-  color:#eafaff;
-  font-size:12px;
-  font-weight:900;
+padding:8px 11px;
+border-radius:999px;
+background:rgba(255,255,255,.12);
+border:1px solid rgba(255,255,255,.14);
+color:#eafaff;
+font-size:12px;
+font-weight:900;
 }
 .sheet-content{
-  background:radial-gradient(circle at 15% 0, rgba(255,109,180,.14), transparent 28%),linear-gradient(180deg, rgba(255,255,255,.99), rgba(242,248,255,.99));
+background:radial-gradient(circle at 15% 0, rgba(255,109,180,.14), transparent 28%),linear-gradient(180deg, rgba(255,255,255,.99), rgba(242,248,255,.99));
 }
 .dex-action{
-  background:linear-gradient(180deg,#ffffff,#eaf6ff);
-  border:1px solid rgba(255,255,255,.42);
-  box-shadow:0 14px 30px rgba(43,89,180,.28),0 0 22px rgba(107,230,255,.16);
+background:linear-gradient(180deg,#ffffff,#eaf6ff);
+border:1px solid rgba(255,255,255,.42);
+box-shadow:0 14px 30px rgba(43,89,180,.28),0 0 22px rgba(107,230,255,.16);
 }
 @media (max-width:720px){
-  .game-menu-grid{grid-template-columns:1fr}
-  .game-menu-card{padding:20px;border-radius:30px}
-  .game-menu-item{min-height:104px}
-  .top-actions{top:auto;right:10px;bottom:108px;gap:7px}
-  .pill{min-width:88px;padding:9px 11px;font-size:12px}
+.game-menu-grid{grid-template-columns:1fr}
+.game-menu-card{padding:20px;border-radius:30px}
+.game-menu-item{min-height:104px}
+.top-actions{top:auto;right:10px;bottom:108px;gap:7px}
+.pill{min-width:88px;padding:9px 11px;font-size:12px}
 }
 
 
 /* ===== V25 portal dunia digital + bangunan lebih terlihat ===== */
 .screen-vignette{
-  background:radial-gradient(circle at 50% 46%, transparent 0 48%, rgba(77,159,255,.05) 72%, rgba(16,30,82,.18) 100%);
+background:radial-gradient(circle at 50% 46%, transparent 0 48%, rgba(77,159,255,.05) 72%, rgba(16,30,82,.18) 100%);
 }
 .scan-ring{
-  border-width:3px;
-  border-style:solid;
-  border-color:rgba(127,239,255,.72);
-  box-shadow:0 0 0 1px rgba(255,255,255,.26) inset,0 0 44px rgba(84,218,255,.34),0 0 110px rgba(255,109,180,.22);
+border-width:3px;
+border-style:solid;
+border-color:rgba(127,239,255,.72);
+box-shadow:0 0 0 1px rgba(255,255,255,.26) inset,0 0 44px rgba(84,218,255,.34),0 0 110px rgba(255,109,180,.22);
 }
 .player-shadow{
-  width:48px;
-  height:16px;
-  opacity:.34;
+width:48px;
+height:16px;
+opacity:.34;
 }
 .move-pad::after{
-  content:"JALAN BEBAS";
-  position:absolute;
-  left:50%;
-  bottom:-22px;
-  transform:translateX(-50%);
-  white-space:nowrap;
-  font-size:10px;
-  font-weight:1000;
-  color:#fff;
-  letter-spacing:.12em;
-  text-shadow:0 2px 8px rgba(0,0,0,.35);
+content:"JALAN BEBAS";
+position:absolute;
+left:50%;
+bottom:-22px;
+transform:translateX(-50%);
+white-space:nowrap;
+font-size:10px;
+font-weight:1000;
+color:#fff;
+letter-spacing:.12em;
+text-shadow:0 2px 8px rgba(0,0,0,.35);
 }
 .top-status .status-sub{
-  font-weight:800;
+font-weight:800;
 }
 
 /* ===== V27 portal animasi + kontrol kiri kanan final ===== */
 .quest-popup{
-  position:absolute;
-  left:50%;
-  top:54%;
-  transform:translate(-50%,-50%);
-  z-index:42;
-  width:min(92vw,420px);
-  pointer-events:auto;
+position:absolute;
+left:50%;
+top:54%;
+transform:translate(-50%,-50%);
+z-index:42;
+width:min(92vw,420px);
+pointer-events:auto;
 }
 .quest-popup.hidden{display:none}
 .quest-aura{
-  position:absolute;
-  inset:-34px;
-  border-radius:42px;
-  background:radial-gradient(circle at 50% 45%, rgba(107,230,255,.45), transparent 58%),radial-gradient(circle at 28% 25%, rgba(255,109,180,.34), transparent 42%);
-  filter:blur(6px);
-  animation:questAuraV26 1.7s ease-in-out infinite;
+position:absolute;
+inset:-34px;
+border-radius:42px;
+background:radial-gradient(circle at 50% 45%, rgba(107,230,255,.45), transparent 58%),radial-gradient(circle at 28% 25%, rgba(255,109,180,.34), transparent 42%);
+filter:blur(6px);
+animation:questAuraV26 1.7s ease-in-out infinite;
 }
 .quest-card{
-  position:relative;
-  overflow:hidden;
-  border-radius:30px;
-  padding:18px;
-  color:#fff;
-  background:linear-gradient(145deg, rgba(15,25,70,.94), rgba(24,80,146,.92) 55%, rgba(58,32,120,.94));
-  border:1px solid rgba(255,255,255,.30);
-  box-shadow:0 28px 70px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.24);
-  backdrop-filter:blur(16px);
+position:relative;
+overflow:hidden;
+border-radius:30px;
+padding:18px;
+color:#fff;
+background:linear-gradient(145deg, rgba(15,25,70,.94), rgba(24,80,146,.92) 55%, rgba(58,32,120,.94));
+border:1px solid rgba(255,255,255,.30);
+box-shadow:0 28px 70px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.24);
+backdrop-filter:blur(16px);
 }
 .quest-card::before{
-  content:"";
-  position:absolute;
-  left:-20%;top:-60%;
-  width:140%;height:100%;
-  background:linear-gradient(110deg, transparent, rgba(255,255,255,.20), transparent);
-  transform:rotate(8deg);
-  animation:questShineV26 2.4s ease-in-out infinite;
+content:"";
+position:absolute;
+left:-20%;top:-60%;
+width:140%;height:100%;
+background:linear-gradient(110deg, transparent, rgba(255,255,255,.20), transparent);
+transform:rotate(8deg);
+animation:questShineV26 2.4s ease-in-out infinite;
 }
 .quest-pop{animation:questPopV26 .32s cubic-bezier(.2,1.25,.2,1)}
 .quest-close{
-  position:absolute;right:12px;top:12px;z-index:2;
-  width:34px;height:34px;border:none;border-radius:50%;
-  color:#11224d;background:rgba(255,255,255,.92);font-size:23px;font-weight:1000;cursor:pointer;
+position:absolute;right:12px;top:12px;z-index:2;
+width:34px;height:34px;border:none;border-radius:50%;
+color:#11224d;background:rgba(255,255,255,.92);font-size:23px;font-weight:1000;cursor:pointer;
 }
 .quest-topline{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.12);font-size:11px;font-weight:1000;letter-spacing:.12em;text-transform:uppercase;color:#eaf5ff}
 .quest-dot{width:9px;height:9px;border-radius:50%;background:#ff6da8;box-shadow:0 0 18px #ff6da8;animation:questBlinkV26 1s infinite}
@@ -424,119 +424,119 @@ html,body,#app{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-fa
 
 /* ===== V28 NPC system: warga + penjaga portal ===== */
 .npc-layer{
-  position:absolute;
-  inset:0;
-  z-index:14;
-  pointer-events:none;
+position:absolute;
+inset:0;
+z-index:14;
+pointer-events:none;
 }
 .npc{
-  position:absolute;
-  width:74px;
-  height:94px;
-  transform:translate(-50%,-100%);
-  pointer-events:auto;
-  cursor:pointer;
-  filter:drop-shadow(0 14px 14px rgba(20,38,84,.28));
-  animation:npcFloatV28 2.7s ease-in-out infinite;
+position:absolute;
+width:74px;
+height:94px;
+transform:translate(-50%,-100%);
+pointer-events:auto;
+cursor:pointer;
+filter:drop-shadow(0 14px 14px rgba(20,38,84,.28));
+animation:npcFloatV28 2.7s ease-in-out infinite;
 }
 .npc::before{
-  content:"";
-  position:absolute;
-  left:50%;
-  bottom:-6px;
-  width:46px;
-  height:13px;
-  transform:translateX(-50%);
-  border-radius:50%;
-  background:rgba(20,38,84,.18);
-  filter:blur(1px);
+content:"";
+position:absolute;
+left:50%;
+bottom:-6px;
+width:46px;
+height:13px;
+transform:translateX(-50%);
+border-radius:50%;
+background:rgba(20,38,84,.18);
+filter:blur(1px);
 }
 .npc-sprite{
-  position:absolute;
-  left:50%;
-  bottom:0;
-  width:86px;
-  height:86px;
-  transform:translateX(-50%);
-  background-repeat:no-repeat;
-  background-size:344px 344px;
-  background-position:0 0;
-  image-rendering:auto;
+position:absolute;
+left:50%;
+bottom:0;
+width:86px;
+height:86px;
+transform:translateX(-50%);
+background-repeat:no-repeat;
+background-size:344px 344px;
+background-position:0 0;
+image-rendering:auto;
 }
 .npc.walking .npc-sprite{animation:npcWalkV28 .92s steps(2) infinite}
 .npc.idle .npc-sprite{animation:npcIdleV28 1.8s steps(2) infinite}
 .npc .npc-name{
-  position:absolute;
-  left:50%;
-  bottom:86px;
-  transform:translateX(-50%);
-  white-space:nowrap;
-  padding:5px 9px;
-  border-radius:999px;
-  font-size:10px;
-  font-weight:1000;
-  color:#16315f;
-  background:rgba(255,255,255,.92);
-  border:1px solid rgba(75,132,255,.22);
-  box-shadow:0 8px 18px rgba(38,67,127,.18);
+position:absolute;
+left:50%;
+bottom:86px;
+transform:translateX(-50%);
+white-space:nowrap;
+padding:5px 9px;
+border-radius:999px;
+font-size:10px;
+font-weight:1000;
+color:#16315f;
+background:rgba(255,255,255,.92);
+border:1px solid rgba(75,132,255,.22);
+box-shadow:0 8px 18px rgba(38,67,127,.18);
 }
 .npc .npc-quest-mark{
-  position:absolute;
-  left:50%;
-  bottom:116px;
-  transform:translateX(-50%);
-  width:28px;
-  height:28px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:1000;
-  color:#10234b;
-  background:linear-gradient(180deg,#fff7a7,#ffd052);
-  border:2px solid #fff;
-  box-shadow:0 0 20px rgba(255,210,82,.78),0 8px 16px rgba(0,0,0,.18);
-  animation:npcQuestMarkV28 1s ease-in-out infinite;
+position:absolute;
+left:50%;
+bottom:116px;
+transform:translateX(-50%);
+width:28px;
+height:28px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:1000;
+color:#10234b;
+background:linear-gradient(180deg,#fff7a7,#ffd052);
+border:2px solid #fff;
+box-shadow:0 0 20px rgba(255,210,82,.78),0 8px 16px rgba(0,0,0,.18);
+animation:npcQuestMarkV28 1s ease-in-out infinite;
 }
 .npc .npc-bubble{
-  position:absolute;
-  left:50%;
-  bottom:132px;
-  transform:translateX(-50%) translateY(8px) scale(.94);
-  min-width:170px;
-  max-width:230px;
-  padding:10px 12px;
-  border-radius:18px 18px 18px 6px;
-  background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(235,248,255,.94));
-  color:#1a3568;
-  font-size:12px;
-  line-height:1.35;
-  font-weight:800;
-  box-shadow:0 18px 34px rgba(18,35,80,.24);
-  border:1px solid rgba(107,230,255,.35);
-  opacity:0;
-  pointer-events:none;
-  transition:.22s ease;
+position:absolute;
+left:50%;
+bottom:132px;
+transform:translateX(-50%) translateY(8px) scale(.94);
+min-width:170px;
+max-width:230px;
+padding:10px 12px;
+border-radius:18px 18px 18px 6px;
+background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(235,248,255,.94));
+color:#1a3568;
+font-size:12px;
+line-height:1.35;
+font-weight:800;
+box-shadow:0 18px 34px rgba(18,35,80,.24);
+border:1px solid rgba(107,230,255,.35);
+opacity:0;
+pointer-events:none;
+transition:.22s ease;
 }
 .npc:hover .npc-bubble,
 .npc.near .npc-bubble{
-  opacity:1;
-  transform:translateX(-50%) translateY(0) scale(1);
+opacity:1;
+transform:translateX(-50%) translateY(0) scale(1);
 }
 .npc.near .npc-sprite{
-  filter:drop-shadow(0 0 16px rgba(107,230,255,.68));
+filter:drop-shadow(0 0 16px rgba(107,230,255,.68));
 }
 .npc.near::after{
-  content:"";
-  position:absolute;
-  left:50%;
-  bottom:8px;
-  width:86px;
-  height:42px;
-  transform:translateX(-50%);
-  border-radius:50%;
-  border:2px dashed rgba(107,230,255,.75);
-  animation:npcNearRingV28 1.4s linear infinite;
+content:"";
+position:absolute;
+left:50%;
+bottom:8px;
+width:86px;
+height:42px;
+transform:translateX(-50%);
+border-radius:50%;
+border:2px dashed rgba(107,230,255,.75);
+animation:npcNearRingV28 1.4s linear infinite;
 }
 @keyframes npcFloatV28{0%,100%{margin-top:0}50%{margin-top:-4px}}
 @keyframes npcQuestMarkV28{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-7px)}}
@@ -545,137 +545,137 @@ html,body,#app{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-fa
 @keyframes npcNearRingV28{from{transform:translateX(-50%) rotate(0deg)}to{transform:translateX(-50%) rotate(360deg)}}
 
 .npc-dialog{
-  position:absolute;
-  inset:0;
-  z-index:86;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-  background:radial-gradient(circle at 50% 42%, rgba(107,230,255,.18), transparent 34%),linear-gradient(180deg,rgba(6,13,32,.28),rgba(8,18,42,.60));
-  backdrop-filter:blur(10px);
+position:absolute;
+inset:0;
+z-index:86;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:18px;
+background:radial-gradient(circle at 50% 42%, rgba(107,230,255,.18), transparent 34%),linear-gradient(180deg,rgba(6,13,32,.28),rgba(8,18,42,.60));
+backdrop-filter:blur(10px);
 }
 .npc-dialog.hidden{display:none}
 .npc-dialog-card{
-  position:relative;
-  width:min(92vw,460px);
-  border-radius:30px;
-  padding:20px;
-  background:
-    radial-gradient(circle at 18% 8%,rgba(255,215,107,.34),transparent 34%),
-    radial-gradient(circle at 88% 8%,rgba(107,230,255,.28),transparent 34%),
-    linear-gradient(160deg,rgba(24,42,102,.96),rgba(15,75,134,.94));
-  color:white;
-  border:1px solid rgba(255,255,255,.25);
-  box-shadow:0 30px 80px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.24);
-  animation:menuPopV24 .28s cubic-bezier(.2,1.2,.22,1);
+position:relative;
+width:min(92vw,460px);
+border-radius:30px;
+padding:20px;
+background:
+radial-gradient(circle at 18% 8%,rgba(255,215,107,.34),transparent 34%),
+radial-gradient(circle at 88% 8%,rgba(107,230,255,.28),transparent 34%),
+linear-gradient(160deg,rgba(24,42,102,.96),rgba(15,75,134,.94));
+color:white;
+border:1px solid rgba(255,255,255,.25);
+box-shadow:0 30px 80px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.24);
+animation:menuPopV24 .28s cubic-bezier(.2,1.2,.22,1);
 }
 .npc-dialog-close{
-  position:absolute;
-  right:12px;
-  top:12px;
-  width:38px;
-  height:38px;
-  border:0;
-  border-radius:50%;
-  cursor:pointer;
-  color:#10234b;
-  background:rgba(255,255,255,.92);
-  font-size:25px;
-  font-weight:1000;
+position:absolute;
+right:12px;
+top:12px;
+width:38px;
+height:38px;
+border:0;
+border-radius:50%;
+cursor:pointer;
+color:#10234b;
+background:rgba(255,255,255,.92);
+font-size:25px;
+font-weight:1000;
 }
 .npc-dialog-head{display:flex;align-items:center;gap:14px;padding-right:34px}
 .npc-dialog-avatar{
-  width:76px;
-  height:76px;
-  border-radius:24px;
-  background-repeat:no-repeat;
-  background-size:304px 304px;
-  background-position:0 0;
-  background-color:rgba(255,255,255,.14);
-  border:2px solid rgba(255,255,255,.62);
-  box-shadow:0 14px 28px rgba(0,0,0,.18);
+width:76px;
+height:76px;
+border-radius:24px;
+background-repeat:no-repeat;
+background-size:304px 304px;
+background-position:0 0;
+background-color:rgba(255,255,255,.14);
+border:2px solid rgba(255,255,255,.62);
+box-shadow:0 14px 28px rgba(0,0,0,.18);
 }
 .npc-dialog-role{
-  display:inline-flex;
-  padding:5px 9px;
-  border-radius:999px;
-  background:rgba(255,255,255,.14);
-  color:#dff8ff;
-  font-size:11px;
-  font-weight:1000;
-  text-transform:uppercase;
-  letter-spacing:.12em;
+display:inline-flex;
+padding:5px 9px;
+border-radius:999px;
+background:rgba(255,255,255,.14);
+color:#dff8ff;
+font-size:11px;
+font-weight:1000;
+text-transform:uppercase;
+letter-spacing:.12em;
 }
 .npc-dialog h3{margin:8px 0 0;font-size:25px;line-height:1.1}
 .npc-dialog p{margin:16px 0 0;color:#ecfbff;line-height:1.55;font-weight:750}
 .npc-dialog-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
 .npc-dialog-actions button{
-  border:0;
-  cursor:pointer;
-  border-radius:18px;
-  padding:13px 16px;
-  font-weight:1000;
-  box-shadow:0 12px 24px rgba(0,0,0,.18);
+border:0;
+cursor:pointer;
+border-radius:18px;
+padding:13px 16px;
+font-weight:1000;
+box-shadow:0 12px 24px rgba(0,0,0,.18);
 }
 #npcDialogQuestBtn{background:linear-gradient(135deg,#ff70ac,#ffd76b);color:#17234b;flex:1}
 #npcDialogLaterBtn{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.18)}
 
 @media(max-width:760px){
-  .npc{width:62px;height:78px}
-  .npc-sprite{width:72px;height:72px;background-size:288px 288px}
-  .npc .npc-name{bottom:74px;font-size:9px}
-  .npc .npc-quest-mark{bottom:102px}
-  .npc .npc-bubble{bottom:118px;min-width:145px;font-size:11px}
+.npc{width:62px;height:78px}
+.npc-sprite{width:72px;height:72px;background-size:288px 288px}
+.npc .npc-name{bottom:74px;font-size:9px}
+.npc .npc-quest-mark{bottom:102px}
+.npc .npc-bubble{bottom:118px;min-width:145px;font-size:11px}
 }
 
 /* ===== V29 NPC fixed: no white box, no muter, posisi ikut koordinat map/portal ===== */
 .npc.map-npc{
-  appearance:none;
-  -webkit-appearance:none;
-  border:0 !important;
-  outline:0 !important;
-  background:transparent !important;
-  box-shadow:none !important;
-  padding:0 !important;
-  margin:0 !important;
-  overflow:visible;
-  width:74px;
-  height:94px;
+appearance:none;
+-webkit-appearance:none;
+border:0 !important;
+outline:0 !important;
+background:transparent !important;
+box-shadow:none !important;
+padding:0 !important;
+margin:0 !important;
+overflow:visible;
+width:74px;
+height:94px;
 }
 .npc.map-npc .npc-sprite{
-  background-color:transparent !important;
-  animation:none !important;
-  background-position:0 0 !important;
-  background-size:344px 344px;
+background-color:transparent !important;
+animation:none !important;
+background-position:0 0 !important;
+background-size:344px 344px;
 }
 .npc.map-npc.walking .npc-sprite,
 .npc.map-npc.idle .npc-sprite{
-  animation:none !important;
+animation:none !important;
 }
 .npc.map-npc::before{
-  pointer-events:none;
+pointer-events:none;
 }
 .npc.map-npc .npc-bubble{z-index:5}
 .npc.map-npc .npc-name{z-index:4}
 .npc.map-npc .npc-quest-mark{z-index:6}
 .maplibregl-marker .npc.map-npc{
-  position:relative;
-  left:auto !important;
-  top:auto !important;
+position:relative;
+left:auto !important;
+top:auto !important;
 }
 
 /* ===== V30 compact live map + report point ===== */
 .top-status.compact-status{
-  min-width:0;
-  width:auto;
-  max-width:260px;
-  padding:9px 14px 10px;
-  border-radius:18px;
-  text-align:left;
-  left:50%;
-  top:14px;
-  background:linear-gradient(180deg, rgba(18,34,74,.86), rgba(19,65,116,.76));
+min-width:0;
+width:auto;
+max-width:260px;
+padding:9px 14px 10px;
+border-radius:18px;
+text-align:left;
+left:50%;
+top:14px;
+background:linear-gradient(180deg, rgba(18,34,74,.86), rgba(19,65,116,.76));
 }
 .status-row{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:1000;letter-spacing:.02em;color:#fff;white-space:nowrap}
 .compact-status .status-sub{font-size:10px;margin-top:3px;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#dcecff}
@@ -706,22 +706,22 @@ html,body,#app{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-fa
 
 /* ===== V31 movement tuning + character center + rotate map ===== */
 .player-anchor{
-  left:50% !important;
-  top:50% !important;
-  transform:translate(-50%,-50%) !important;
+left:50% !important;
+top:50% !important;
+transform:translate(-50%,-50%) !important;
 }
 .player-sprite{
-  left:46% !important;
-  bottom:6px !important;
+left:46% !important;
+bottom:6px !important;
 }
 .player-shadow{
-  left:46% !important;
-  bottom:9px !important;
+left:46% !important;
+bottom:9px !important;
 }
 .scan-ring{
-  left:50% !important;
-  top:50% !important;
-  transform:translate(-50%,-50%) !important;
+left:50% !important;
+top:50% !important;
+transform:translate(-50%,-50%) !important;
 }
 .player-sprite.idle.face-left{background-position:-208px 0;transform:scaleX(-1)!important}
 .player-sprite.idle.face-right{background-position:-208px 0;transform:none!important}
@@ -733,8 +733,8 @@ html,body,#app{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-fa
 
 
 /* =========================================================
-   BogorDex v32 - MapLibre migration final overrides
-   ========================================================= */
+  BogorDex v32 - MapLibre migration final overrides
+  ========================================================= */
 .maplibregl-ctrl-bottom-left,.maplibregl-ctrl-bottom-right{display:none!important}
 .player-anchor{left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:104px!important;height:112px!important}
 .player-shadow{left:50%!important;bottom:18px!important;transform:translateX(-50%)!important;width:58px!important;height:17px!important}
@@ -749,58 +749,58 @@ html,body,#app{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-fa
 
 /* ===== V34 Anime/Pokemon GO Map Mood ===== */
 .maplibregl-canvas{
-  filter:saturate(1.35) brightness(1.08) contrast(.92);
+filter:saturate(1.35) brightness(1.08) contrast(.92);
 }
 .screen-vignette{
-  background:
-    radial-gradient(circle at 50% 44%, rgba(255,255,255,0) 0 48%, rgba(109,230,255,.07) 72%, rgba(50,92,170,.18) 100%),
-    linear-gradient(180deg, rgba(135,218,255,.10), rgba(255,255,255,0) 38%, rgba(107,230,255,.08));
+background:
+radial-gradient(circle at 50% 44%, rgba(255,255,255,0) 0 48%, rgba(109,230,255,.07) 72%, rgba(50,92,170,.18) 100%),
+linear-gradient(180deg, rgba(135,218,255,.10), rgba(255,255,255,0) 38%, rgba(107,230,255,.08));
 }
 .top-status.compact-status{
-  background:linear-gradient(180deg, rgba(25,57,119,.82), rgba(18,42,90,.74));
+background:linear-gradient(180deg, rgba(25,57,119,.82), rgba(18,42,90,.74));
 }
 .player-anchor{
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
 }
 .scan-ring{
-  left:50%;
-  top:50%;
+left:50%;
+top:50%;
 }
 .portal-marker .portal-core{
-  box-shadow:0 0 22px rgba(107,230,255,.72),0 0 44px rgba(255,105,180,.44), inset 0 0 18px rgba(255,255,255,.70);
+box-shadow:0 0 22px rgba(107,230,255,.72),0 0 44px rgba(255,105,180,.44), inset 0 0 18px rgba(255,255,255,.70);
 }
 .portal-marker .portal-ring,.portal-marker .portal-ring::before,.portal-marker .portal-ring::after{
-  animation-duration:1.45s;
+animation-duration:1.45s;
 }
 
 /* =========================================================
-   V36 MOBILE MAPDEX PATCH
-   - layar fokus Android portrait
-   - karakter jadi marker map, bukan overlay tengah layar saat peta digeser
-   - sprite pakai frame sheet 4x4 tanpa animasi muter
-   - MapDex phone panel
+  V36 MOBILE MAPDEX PATCH
+  - layar fokus Android portrait
+  - karakter jadi marker map, bukan overlay tengah layar saat peta digeser
+  - sprite pakai frame sheet 4x4 tanpa animasi muter
+  - MapDex phone panel
 ========================================================= */
 html,body,#app{
-  width:100vw!important;
-  height:100vh!important;
-  height:100dvh!important;
-  min-height:100dvh!important;
-  overscroll-behavior:none;
-  touch-action:none;
-  background:#9ed4e8!important;
+width:100vw!important;
+height:100vh!important;
+height:100dvh!important;
+min-height:100dvh!important;
+overscroll-behavior:none;
+touch-action:none;
+background:#9ed4e8!important;
 }
 #map{width:100vw!important;height:100dvh!important;}
 .maplibregl-ctrl-logo,.maplibregl-ctrl-attrib{display:none!important;}
 .top-status.compact-status{
-  top:calc(env(safe-area-inset-top,0px) + 8px)!important;
-  min-width:0!important;
-  max-width:210px!important;
-  padding:8px 12px!important;
-  border-radius:16px!important;
-  text-align:left!important;
-  transform:translateX(-50%) scale(.92)!important;
+top:calc(env(safe-area-inset-top,0px) + 8px)!important;
+min-width:0!important;
+max-width:210px!important;
+padding:8px 12px!important;
+border-radius:16px!important;
+text-align:left!important;
+transform:translateX(-50%) scale(.92)!important;
 }
 .status-row{font-size:12px!important;gap:7px!important;display:flex;align-items:center;}
 .status-sub{font-size:9px!important;margin-top:2px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -814,11 +814,11 @@ html,body,#app{
 .main-action{bottom:calc(env(safe-area-inset-bottom,0px) + 12px)!important;width:76px!important;height:76px!important;}
 .dex-action{right:10px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 18px)!important;width:66px!important;height:50px!important;border-radius:17px!important;}
 .mapdex-action{
-  position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 82px);z-index:23;
-  width:66px;height:62px;border:0;border-radius:20px;cursor:pointer;color:#123a72;font-weight:1000;
-  background:linear-gradient(180deg,#ffffff,#eaf3ff);
-  box-shadow:0 12px 24px rgba(25,55,111,.22), inset 0 0 0 1px rgba(255,255,255,.8);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 82px);z-index:23;
+width:66px;height:62px;border:0;border-radius:20px;cursor:pointer;color:#123a72;font-weight:1000;
+background:linear-gradient(180deg,#ffffff,#eaf3ff);
+box-shadow:0 12px 24px rgba(25,55,111,.22), inset 0 0 0 1px rgba(255,255,255,.8);
+display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
 }
 .mapdex-action .phone-icon{font-size:25px;line-height:1;display:block;transform:rotate(0deg);}
 .mapdex-action small{font-size:10px;letter-spacing:.02em;}
@@ -826,24 +826,24 @@ html,body,#app{
 /* Fixed overlay player disembunyikan: player sekarang marker koordinat map. */
 .player-anchor,.scan-ring{display:none!important;}
 .player-map-marker{
-  position:relative;width:150px;height:150px;pointer-events:none;transform:translate(-50%,-50%);
-  filter:drop-shadow(0 18px 18px rgba(22,45,86,.22));
+position:relative;width:150px;height:150px;pointer-events:none;transform:translate(-50%,-50%);
+filter:drop-shadow(0 18px 18px rgba(22,45,86,.22));
 }
 .player-map-marker .player-ring{
-  position:absolute;left:50%;top:50%;width:132px;height:132px;border-radius:50%;transform:translate(-50%,-50%);
-  border:2.5px solid rgba(95,229,255,.88);box-shadow:0 0 0 1px rgba(255,255,255,.22) inset,0 0 38px rgba(86,220,255,.22);
-  animation:playerRingPulse 2.8s ease-in-out infinite;
+position:absolute;left:50%;top:50%;width:132px;height:132px;border-radius:50%;transform:translate(-50%,-50%);
+border:2.5px solid rgba(95,229,255,.88);box-shadow:0 0 0 1px rgba(255,255,255,.22) inset,0 0 38px rgba(86,220,255,.22);
+animation:playerRingPulse 2.8s ease-in-out infinite;
 }
 @keyframes playerRingPulse{0%,100%{opacity:.72;transform:translate(-50%,-50%) scale(.94)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.03)}}
 .player-map-marker .player-shadow{
-  position:absolute;left:50%;top:68%;width:54px;height:18px;border-radius:50%;transform:translate(-50%,-50%);
-  background:radial-gradient(circle,rgba(22,35,55,.24),rgba(22,35,55,0) 70%);
+position:absolute;left:50%;top:68%;width:54px;height:18px;border-radius:50%;transform:translate(-50%,-50%);
+background:radial-gradient(circle,rgba(22,35,55,.24),rgba(22,35,55,0) 70%);
 }
 .player-map-marker .player-sprite{
-  position:absolute!important;left:50%!important;top:50%!important;bottom:auto!important;width:98px!important;height:98px!important;
-  transform:translate(-50%,-67%)!important;background-image:url("assets/sprout_character.png")!important;
-  background-repeat:no-repeat!important;background-size:390px 390px!important;background-position:var(--sprite-x,0px) var(--sprite-y,0px)!important;
-  animation:none!important;image-rendering:auto!important;background-color:transparent!important;
+position:absolute!important;left:50%!important;top:50%!important;bottom:auto!important;width:98px!important;height:98px!important;
+transform:translate(-50%,-67%)!important;background-image:url("assets/sprout_character.png")!important;
+background-repeat:no-repeat!important;background-size:390px 390px!important;background-position:var(--sprite-x,0px) var(--sprite-y,0px)!important;
+animation:none!important;image-rendering:auto!important;background-color:transparent!important;
 }
 /* Pastikan semua class lama tidak ganggu frame V36 */
 .player-map-marker .player-sprite.idle,
@@ -876,7 +876,7 @@ html,body,#app{
 .mapdex-row{border:0;border-radius:18px;background:#fff;color:#1c365f;text-align:left;padding:10px 12px;box-shadow:0 8px 18px rgba(30,70,130,.1);display:flex;justify-content:space-between;gap:10px;align-items:center;cursor:pointer;}
 .mapdex-row strong{display:block;font-size:13px;}.mapdex-row small{display:block;color:#60738e;font-weight:800;margin-top:2px;}.mapdex-row b{font-size:12px;color:#1f7bbd;white-space:nowrap;}
 @media (orientation:landscape) and (max-height:560px){
-  .top-actions{display:none!important}.bottom-left-profile{display:none!important}.move-pad{transform:scale(.82);transform-origin:left bottom}.mapdex-phone{height:94dvh;width:min(700px,94vw)}.mapdex-canvas{height:230px}.mapdex-list{height:calc(100% - 378px)}
+.top-actions{display:none!important}.bottom-left-profile{display:none!important}.move-pad{transform:scale(.82);transform-origin:left bottom}.mapdex-phone{height:94dvh;width:min(700px,94vw)}.mapdex-canvas{height:230px}.mapdex-list{height:calc(100% - 378px)}
 }
 
 /* ===== V37 Street Anime / Pokemon GO-like mobile camera ===== */
@@ -911,145 +911,145 @@ html,body,#app{width:100dvw!important;height:100dvh!important;background:#9fd8f4
 
 
 /* =========================================================
-   V38 Street Anime Phone UI
-   - kamera rasa Pokemon GO: low angle, luas ke depan
-   - rotate kiri/kanan boleh, pitch atas-bawah dikunci via JS
-   - tombol UI dibuat glass anime dan tidak saling numpuk
-   - pointer-events UI dipaksa aktif supaya tombol tidak terasa error
+  V38 Street Anime Phone UI
+  - kamera rasa Pokemon GO: low angle, luas ke depan
+  - rotate kiri/kanan boleh, pitch atas-bawah dikunci via JS
+  - tombol UI dibuat glass anime dan tidak saling numpuk
+  - pointer-events UI dipaksa aktif supaya tombol tidak terasa error
 ========================================================= */
 #map{z-index:1!important;}
 .screen-vignette{z-index:2!important;pointer-events:none!important;}
 .top-status,.top-actions,.move-pad,.main-action,.dex-action,.mapdex-action,.fab,.bottom-left-profile,.sheet-mini-btn,.bottom-sheet,.modal,.game-menu-modal,.mapdex-modal,.npc-dialog,.quest-popup{
-  pointer-events:auto!important;
+pointer-events:auto!important;
 }
 .top-status,.top-actions,.move-pad,.main-action,.dex-action,.mapdex-action,.fab,.bottom-left-profile,.sheet-mini-btn{z-index:80!important;}
 .bottom-sheet{z-index:120!important}.modal,.npc-dialog,.quest-popup{z-index:160!important}.game-menu-modal,.mapdex-modal{z-index:220!important}
 
 .maplibregl-canvas{
-  filter:saturate(1.55) brightness(1.08) contrast(.96) hue-rotate(-5deg)!important;
+filter:saturate(1.55) brightness(1.08) contrast(.96) hue-rotate(-5deg)!important;
 }
 .screen-vignette{
-  background:
-    linear-gradient(180deg,rgba(189,239,255,.30) 0%,rgba(255,255,255,0) 28%,rgba(62,189,255,.08) 72%,rgba(14,36,86,.32) 100%),
-    radial-gradient(circle at 50% 77%,transparent 0 36%,rgba(53,126,255,.10) 70%,rgba(5,19,58,.28) 100%)!important;
+background:
+linear-gradient(180deg,rgba(189,239,255,.30) 0%,rgba(255,255,255,0) 28%,rgba(62,189,255,.08) 72%,rgba(14,36,86,.32) 100%),
+radial-gradient(circle at 50% 77%,transparent 0 36%,rgba(53,126,255,.10) 70%,rgba(5,19,58,.28) 100%)!important;
 }
 
 /* status kecil seperti HUD */
 .top-status.compact-status{
-  left:10px!important;
-  top:calc(env(safe-area-inset-top,0px) + 8px)!important;
-  width:170px!important;
-  max-width:170px!important;
-  padding:9px 11px!important;
-  border-radius:18px!important;
-  background:linear-gradient(180deg,rgba(20,51,114,.68),rgba(15,34,76,.56))!important;
-  border:1px solid rgba(255,255,255,.30)!important;
-  backdrop-filter:blur(18px) saturate(1.4)!important;
-  box-shadow:0 14px 34px rgba(25,55,120,.22),inset 0 1px 0 rgba(255,255,255,.24)!important;
+left:10px!important;
+top:calc(env(safe-area-inset-top,0px) + 8px)!important;
+width:170px!important;
+max-width:170px!important;
+padding:9px 11px!important;
+border-radius:18px!important;
+background:linear-gradient(180deg,rgba(20,51,114,.68),rgba(15,34,76,.56))!important;
+border:1px solid rgba(255,255,255,.30)!important;
+backdrop-filter:blur(18px) saturate(1.4)!important;
+box-shadow:0 14px 34px rgba(25,55,120,.22),inset 0 1px 0 rgba(255,255,255,.24)!important;
 }
 
 /* kategori dibuat jadi strip transparan anime, bukan tombol gede menumpuk */
 .top-actions{
-  left:10px!important;
-  right:10px!important;
-  top:calc(env(safe-area-inset-top,0px) + 58px)!important;
-  bottom:auto!important;
-  display:flex!important;
-  flex-direction:row!important;
-  gap:7px!important;
-  overflow-x:auto!important;
-  overflow-y:hidden!important;
-  padding:2px 2px 7px!important;
+left:10px!important;
+right:10px!important;
+top:calc(env(safe-area-inset-top,0px) + 58px)!important;
+bottom:auto!important;
+display:flex!important;
+flex-direction:row!important;
+gap:7px!important;
+overflow-x:auto!important;
+overflow-y:hidden!important;
+padding:2px 2px 7px!important;
   transform:none!important;
-  scrollbar-width:none!important;
-  -webkit-overflow-scrolling:touch!important;
+scrollbar-width:none!important;
+-webkit-overflow-scrolling:touch!important;
 }
 .top-actions::-webkit-scrollbar{display:none!important;}
 .pill{
-  flex:0 0 auto!important;
-  width:auto!important;
-  min-width:82px!important;
-  height:34px!important;
-  border-radius:999px!important;
-  padding:7px 12px!important;
-  font-size:11px!important;
-  line-height:1!important;
-  color:#ffffff!important;
-  background:linear-gradient(180deg,rgba(63,130,255,.58),rgba(35,82,177,.42))!important;
-  border:1px solid rgba(255,255,255,.34)!important;
-  backdrop-filter:blur(18px) saturate(1.5)!important;
-  box-shadow:0 10px 22px rgba(36,83,170,.18), inset 0 1px 0 rgba(255,255,255,.28)!important;
+flex:0 0 auto!important;
+width:auto!important;
+min-width:82px!important;
+height:34px!important;
+border-radius:999px!important;
+padding:7px 12px!important;
+font-size:11px!important;
+line-height:1!important;
+color:#ffffff!important;
+background:linear-gradient(180deg,rgba(63,130,255,.58),rgba(35,82,177,.42))!important;
+border:1px solid rgba(255,255,255,.34)!important;
+backdrop-filter:blur(18px) saturate(1.5)!important;
+box-shadow:0 10px 22px rgba(36,83,170,.18), inset 0 1px 0 rgba(255,255,255,.28)!important;
 }
 .pill:not(.active){opacity:.48!important;filter:grayscale(.25)!important;}
 
 /* karakter dibuat lebih terasa di bawah layar, bukan top-down */
 .player-map-marker{
-  width:132px!important;
-  height:158px!important;
-  filter:drop-shadow(0 28px 28px rgba(14,36,82,.32))!important;
+width:132px!important;
+height:158px!important;
+filter:drop-shadow(0 28px 28px rgba(14,36,82,.32))!important;
 }
 .player-map-marker .player-ring{
-  width:118px!important;
-  height:82px!important;
-  left:50%!important;
-  top:70%!important;
-  transform:translate(-50%,-50%) rotateX(58deg)!important;
-  border:3px solid rgba(99,239,255,.86)!important;
-  box-shadow:0 0 30px rgba(90,232,255,.38), inset 0 0 18px rgba(255,255,255,.28)!important;
+width:118px!important;
+height:82px!important;
+left:50%!important;
+top:70%!important;
+transform:translate(-50%,-50%) rotateX(58deg)!important;
+border:3px solid rgba(99,239,255,.86)!important;
+box-shadow:0 0 30px rgba(90,232,255,.38), inset 0 0 18px rgba(255,255,255,.28)!important;
 }
 .player-map-marker .player-shadow{
-  width:56px!important;
-  height:16px!important;
-  top:82%!important;
-  opacity:.65!important;
+width:56px!important;
+height:16px!important;
+top:82%!important;
+opacity:.65!important;
 }
 .player-map-marker .player-sprite{
-  width:104px!important;
-  height:104px!important;
-  background-size:416px 416px!important;
-  top:46%!important;
-  transform:translate(-50%,-66%)!important;
+width:104px!important;
+height:104px!important;
+background-size:416px 416px!important;
+top:46%!important;
+transform:translate(-50%,-66%)!important;
 }
 .player-map-marker .player-sprite.idle,.player-map-marker .player-sprite.walk,.player-map-marker .player-sprite.run,.player-map-marker .player-sprite.face-left,.player-map-marker .player-sprite.face-right,.player-map-marker .player-sprite.face-up,.player-map-marker .player-sprite.face-down{transform:translate(-50%,-66%)!important;}
 
 /* tombol utama diganti dari nuansa merah/pokeball ke crystal anime hub */
 .main-action{
-  width:78px!important;
-  height:78px!important;
-  bottom:calc(env(safe-area-inset-bottom,0px) + 12px)!important;
-  border-radius:28px!important;
-  background:
-    radial-gradient(circle at 50% 30%,rgba(255,255,255,.98) 0 18%,rgba(255,255,255,.52) 19% 28%,transparent 29%),
-    conic-gradient(from 210deg,#7bf6ff,#fff08c,#ff8ad8,#7bf6ff)!important;
-  border:1px solid rgba(255,255,255,.72)!important;
-  box-shadow:0 18px 44px rgba(96,226,255,.36),0 0 34px rgba(255,139,216,.25),inset 0 2px 0 rgba(255,255,255,.65)!important;
-  animation:hubFloatV38 2.4s ease-in-out infinite!important;
+width:78px!important;
+height:78px!important;
+bottom:calc(env(safe-area-inset-bottom,0px) + 12px)!important;
+border-radius:28px!important;
+background:
+radial-gradient(circle at 50% 30%,rgba(255,255,255,.98) 0 18%,rgba(255,255,255,.52) 19% 28%,transparent 29%),
+conic-gradient(from 210deg,#7bf6ff,#fff08c,#ff8ad8,#7bf6ff)!important;
+border:1px solid rgba(255,255,255,.72)!important;
+box-shadow:0 18px 44px rgba(96,226,255,.36),0 0 34px rgba(255,139,216,.25),inset 0 2px 0 rgba(255,255,255,.65)!important;
+animation:hubFloatV38 2.4s ease-in-out infinite!important;
 }
 .main-action::after{
-  inset:22px!important;
-  border:2px solid rgba(22,66,135,.38)!important;
-  background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(202,244,255,.82))!important;
-  box-shadow:inset 0 0 14px rgba(73,196,255,.38)!important;
+inset:22px!important;
+border:2px solid rgba(22,66,135,.38)!important;
+background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(202,244,255,.82))!important;
+box-shadow:inset 0 0 14px rgba(73,196,255,.38)!important;
 }
 .main-action::before{
-  content:"HUB"!important;
-  bottom:-18px!important;
-  font-size:10px!important;
-  letter-spacing:.18em!important;
-  color:#ffffff!important;
-  text-shadow:0 2px 8px rgba(16,42,92,.62)!important;
+content:"HUB"!important;
+bottom:-18px!important;
+font-size:10px!important;
+letter-spacing:.18em!important;
+color:#ffffff!important;
+text-shadow:0 2px 8px rgba(16,42,92,.62)!important;
 }
 @keyframes hubFloatV38{0%,100%{transform:translateX(-50%) translateY(0) scale(1)}50%{transform:translateX(-50%) translateY(-4px) scale(1.035)}}
 
 /* tombol kanan dibuat glass anime dan lebih rapi */
 .fab-locate,.mapdex-action,.dex-action{
-  right:12px!important;
-  border-radius:22px!important;
-  background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(226,247,255,.66))!important;
-  border:1px solid rgba(255,255,255,.54)!important;
-  backdrop-filter:blur(16px) saturate(1.45)!important;
-  color:#17386f!important;
-  box-shadow:0 15px 34px rgba(30,75,150,.18),inset 0 1px 0 rgba(255,255,255,.52)!important;
+right:12px!important;
+border-radius:22px!important;
+background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(226,247,255,.66))!important;
+border:1px solid rgba(255,255,255,.54)!important;
+backdrop-filter:blur(16px) saturate(1.45)!important;
+color:#17386f!important;
+box-shadow:0 15px 34px rgba(30,75,150,.18),inset 0 1px 0 rgba(255,255,255,.52)!important;
 }
 .fab-locate{bottom:calc(env(safe-area-inset-bottom,0px) + 198px)!important;width:58px!important;height:58px!important;}
 .mapdex-action{bottom:calc(env(safe-area-inset-bottom,0px) + 112px)!important;width:72px!important;height:70px!important;}
@@ -1058,79 +1058,79 @@ html,body,#app{width:100dvw!important;height:100dvh!important;background:#9fd8f4
 
 /* joystick lebih compact biar layar lega */
 .move-pad{
-  left:12px!important;
-  bottom:calc(env(safe-area-inset-bottom,0px) + 104px)!important;
-  width:106px!important;
-  height:106px!important;
-  background:radial-gradient(circle,rgba(255,255,255,.48),rgba(255,255,255,.13) 70%)!important;
-  border:1px solid rgba(255,255,255,.42)!important;
-  backdrop-filter:blur(16px)!important;
+left:12px!important;
+bottom:calc(env(safe-area-inset-bottom,0px) + 104px)!important;
+width:106px!important;
+height:106px!important;
+background:radial-gradient(circle,rgba(255,255,255,.48),rgba(255,255,255,.13) 70%)!important;
+border:1px solid rgba(255,255,255,.42)!important;
+backdrop-filter:blur(16px)!important;
 }
 .move-btn{width:39px!important;height:39px!important;border-radius:16px!important;}
 .move-btn.up{left:34px!important;top:6px!important}.move-btn.left{left:6px!important;top:34px!important}.move-btn.right{right:6px!important;top:34px!important}.move-btn.down{left:34px!important;bottom:6px!important}
 .bottom-left-profile{
-  left:12px!important;
-  bottom:calc(env(safe-area-inset-bottom,0px) + 14px)!important;
-  max-width:250px!important;
-  transform:scale(.82)!important;
+left:12px!important;
+bottom:calc(env(safe-area-inset-bottom,0px) + 14px)!important;
+max-width:250px!important;
+transform:scale(.82)!important;
 }
 
 /* menu popup: glass transparent anime */
 .game-menu-card{
-  width:min(92vw,420px)!important;
-  border-radius:34px!important;
-  color:#fff!important;
-  background:
-    radial-gradient(circle at 15% 10%,rgba(124,246,255,.34),transparent 32%),
-    radial-gradient(circle at 85% 12%,rgba(255,142,216,.28),transparent 34%),
-    linear-gradient(160deg,rgba(17,39,92,.72),rgba(32,94,155,.58) 52%,rgba(18,35,88,.68))!important;
-  border:1px solid rgba(255,255,255,.34)!important;
-  backdrop-filter:blur(22px) saturate(1.45)!important;
-  box-shadow:0 28px 80px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.28)!important;
+width:min(92vw,420px)!important;
+border-radius:34px!important;
+color:#fff!important;
+background:
+radial-gradient(circle at 15% 10%,rgba(124,246,255,.34),transparent 32%),
+radial-gradient(circle at 85% 12%,rgba(255,142,216,.28),transparent 34%),
+linear-gradient(160deg,rgba(17,39,92,.72),rgba(32,94,155,.58) 52%,rgba(18,35,88,.68))!important;
+border:1px solid rgba(255,255,255,.34)!important;
+backdrop-filter:blur(22px) saturate(1.45)!important;
+box-shadow:0 28px 80px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.28)!important;
 }
 .game-menu-item{
-  background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(232,248,255,.66))!important;
-  border:1px solid rgba(255,255,255,.50)!important;
-  backdrop-filter:blur(14px)!important;
-  color:#15386e!important;
+background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(232,248,255,.66))!important;
+border:1px solid rgba(255,255,255,.50)!important;
+backdrop-filter:blur(14px)!important;
+color:#15386e!important;
 }
 .game-menu-item.primary{background:linear-gradient(150deg,rgba(129,245,255,.92),rgba(255,240,144,.86) 55%,rgba(255,139,216,.82))!important;}
 .game-menu-desc{color:#ecfbff!important;}
 
 @media (min-width:760px){
-  #app{max-width:430px!important;margin:0 auto!important;}
+#app{max-width:430px!important;margin:0 auto!important;}
 }
 
 /* === V42 SMOOTH COMPASS + PLAYER VISIBILITY PATCH === */
 .maplibregl-marker.player-map-marker,
 .player-map-marker{
-  z-index:60!important;
-  pointer-events:none!important;
-  width:126px!important;
-  height:146px!important;
+z-index:60!important;
+pointer-events:none!important;
+width:126px!important;
+height:146px!important;
 }
 .player-map-marker .player-ring{
-  width:108px!important;
-  height:108px!important;
-  left:50%!important;
-  top:62%!important;
-  transform:translate(-50%,-50%)!important;
+width:108px!important;
+height:108px!important;
+left:50%!important;
+top:62%!important;
+transform:translate(-50%,-50%)!important;
 }
 .player-map-marker .player-shadow{
-  left:50%!important;
-  top:88%!important;
-  transform:translate(-50%,-50%)!important;
+left:50%!important;
+top:88%!important;
+transform:translate(-50%,-50%)!important;
 }
 .player-map-marker .player-sprite{
-  left:50%!important;
-  top:54%!important;
-  transform:translate(-50%,-58%)!important;
-  width:104px!important;
-  height:104px!important;
-  background-size:416px 416px!important;
-  opacity:1!important;
-  visibility:visible!important;
-  filter:drop-shadow(0 12px 10px rgba(15,32,68,.28))!important;
+left:50%!important;
+top:54%!important;
+transform:translate(-50%,-58%)!important;
+width:104px!important;
+height:104px!important;
+background-size:416px 416px!important;
+opacity:1!important;
+visibility:visible!important;
+filter:drop-shadow(0 12px 10px rgba(15,32,68,.28))!important;
 }
 .player-map-marker .player-sprite.idle,
 .player-map-marker .player-sprite.walk,
@@ -1139,7 +1139,7 @@ html,body,#app{width:100dvw!important;height:100dvh!important;background:#9fd8f4
 .player-map-marker .player-sprite.face-right,
 .player-map-marker .player-sprite.face-up,
 .player-map-marker .player-sprite.face-down{
-  transform:translate(-50%,-58%)!important;
+transform:translate(-50%,-58%)!important;
 }
 .player-anchor{display:none!important;}
 .scan-ring{opacity:.72!important;}
@@ -1147,30 +1147,92 @@ html,body,#app{width:100dvw!important;height:100dvh!important;background:#9fd8f4
 
 
 /* === PATCH GPS MARKER + SPRITE 4x4 BOGORDEX ===
-   Penting: root .player-map-marker tidak boleh diberi transform !important,
-   karena transform posisi marker dibuat langsung oleh MapLibre. Kalau dioverride,
-   karakter terlihat hilang / tidak nempel di titik GPS. === */
+  Penting: root .player-map-marker tidak boleh diberi transform !important,
+  karena transform posisi marker dibuat langsung oleh MapLibre. Kalau dioverride,
+  karakter terlihat hilang / tidak nempel di titik GPS. === */
 .maplibregl-marker.player-map-marker,
 .player-map-marker{
-  z-index:90!important;
-  pointer-events:none!important;
-  width:126px!important;
-  height:146px!important;
+z-index:90!important;
+pointer-events:none!important;
+width:126px!important;
+height:146px!important;
 }
 .player-map-marker .player-sprite{
+background-image:url("assets/sprout_character.png")!important;
+background-repeat:no-repeat!important;
+background-size:416px 416px!important;
+background-position:var(--sprite-x,0px) var(--sprite-y,0px)!important;
+width:104px!important;
+height:104px!important;
+left:50%!important;
+top:48%!important;
+transform:translate(-50%,-50%)!important;
+opacity:1!important;
+visibility:visible!important;
+image-rendering:auto!important;
+animation:none!important;
+}
+.player-map-marker .player-sprite.idle,
+.player-map-marker .player-sprite.walk,
+.player-map-marker .player-sprite.run,
+.player-map-marker .player-sprite.face-left,
+.player-map-marker .player-sprite.face-right,
+.player-map-marker .player-sprite.face-up,
+.player-map-marker .player-sprite.face-down{
+background-position:var(--sprite-x,0px) var(--sprite-y,0px)!important;
+transform:translate(-50%,-50%)!important;
+animation:none!important;
+}
+.player-map-marker .player-ring{
+top:68%!important;
+}
+.player-map-marker .player-shadow{
+top:82%!important;
+}
+
+/* =========================================================
+   V44 GPS character stability patch
+   - rambut karakter tidak kepotong: pakai cell sprite asli 125x125
+   - marker tetap nempel koordinat map, tidak ikut rotate layar
+   - efek awan/kabut hanya saat zoom sangat dekat
+========================================================= */
+#app{position:relative!important;overflow:hidden!important;}
+.player-map-marker{
+  width:152px!important;
+  height:178px!important;
+  overflow:visible!important;
+  will-change:transform!important;
+  pointer-events:none!important;
+}
+.player-map-marker .player-ring{
+  width:124px!important;
+  height:86px!important;
+  left:50%!important;
+  top:74%!important;
+  transform:translate(-50%,-50%) rotateX(58deg)!important;
+}
+.player-map-marker .player-shadow{
+  width:60px!important;
+  height:18px!important;
+  left:50%!important;
+  top:86%!important;
+  transform:translate(-50%,-50%)!important;
+}
+.player-map-marker .player-sprite{
+  width:125px!important;
+  height:125px!important;
+  left:50%!important;
+  top:44%!important;
+  bottom:auto!important;
   background-image:url("assets/sprout_character.png")!important;
   background-repeat:no-repeat!important;
-  background-size:416px 416px!important;
+  background-size:500px 500px!important;
   background-position:var(--sprite-x,0px) var(--sprite-y,0px)!important;
-  width:104px!important;
-  height:104px!important;
-  left:50%!important;
-  top:48%!important;
   transform:translate(-50%,-50%)!important;
-  opacity:1!important;
-  visibility:visible!important;
-  image-rendering:auto!important;
   animation:none!important;
+  image-rendering:auto!important;
+  overflow:visible!important;
+  filter:drop-shadow(0 13px 12px rgba(12,31,70,.24))!important;
 }
 .player-map-marker .player-sprite.idle,
 .player-map-marker .player-sprite.walk,
@@ -1183,789 +1245,234 @@ html,body,#app{width:100dvw!important;height:100dvh!important;background:#9fd8f4
   transform:translate(-50%,-50%)!important;
   animation:none!important;
 }
-.player-map-marker .player-ring{
-  top:68%!important;
+#app::before{
+  content:"";
+  position:absolute;
+  left:0;right:0;top:0;
+  height:42dvh;
+  z-index:3;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .35s ease;
+  background:
+    radial-gradient(ellipse at 16% 12%, rgba(255,255,255,.95) 0 12%, rgba(255,255,255,.50) 22%, transparent 42%),
+    radial-gradient(ellipse at 72% 8%, rgba(255,255,255,.92) 0 14%, rgba(255,255,255,.46) 26%, transparent 46%),
+    radial-gradient(ellipse at 45% 26%, rgba(255,255,255,.78) 0 12%, rgba(255,255,255,.35) 24%, transparent 48%),
+    linear-gradient(180deg, rgba(237,252,255,.92), rgba(227,248,255,.46) 54%, rgba(227,248,255,0));
+  filter:blur(.3px);
 }
-.player-map-marker .player-shadow{
-  top:82%!important;
-}
+#app.app-max-zoom::before{opacity:1;}
 
 
 /* =========================================================
-   BOGORDEX v44 - HORIZON ANIME ROAD VIEW
-   Fokus revisi: pandangan/zoom seperti referensi, UI FX awan + embun,
-   HUD landscape, karakter tetap terasa menempel di jalan.
-   ========================================================= */
+   V44 FINAL - CAMERA REFERENCE + CLOUD/MIST FX + ROAD PLAYER
+   Fokus: seperti gambar referensi, tanpa ubah UI lain.
+========================================================= */
+#app{position:relative!important;overflow:hidden!important;background:#dff7ff!important;}
+
+/* layer awan tebal di horizon atas */
+#app::before{
+  content:""!important;
+  position:absolute!important;
+  left:-6vw!important;right:-6vw!important;top:-3dvh!important;
+  height:39dvh!important;
+  z-index:4!important;
+  pointer-events:none!important;
+  opacity:1!important;
+  background:
+    radial-gradient(ellipse at 7% 13%, rgba(255,255,255,.98) 0 10%, rgba(255,255,255,.82) 18%, rgba(255,255,255,.32) 32%, transparent 48%),
+    radial-gradient(ellipse at 23% 6%, rgba(255,255,255,.96) 0 12%, rgba(255,255,255,.74) 22%, rgba(255,255,255,.28) 38%, transparent 56%),
+    radial-gradient(ellipse at 45% 9%, rgba(255,255,255,.97) 0 14%, rgba(255,255,255,.78) 24%, rgba(255,255,255,.34) 42%, transparent 62%),
+    radial-gradient(ellipse at 66% 11%, rgba(255,255,255,.98) 0 12%, rgba(255,255,255,.76) 24%, rgba(255,255,255,.30) 42%, transparent 60%),
+    radial-gradient(ellipse at 88% 8%, rgba(255,255,255,.95) 0 13%, rgba(255,255,255,.72) 26%, rgba(255,255,255,.28) 44%, transparent 64%),
+    linear-gradient(180deg, rgba(219,244,255,.96) 0%, rgba(236,252,255,.78) 42%, rgba(238,252,255,.30) 72%, rgba(238,252,255,0) 100%)!important;
+  filter:blur(.7px)!important;
+}
+
+/* layer embun/kabut jauh, tidak nutup karakter */
+#app::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;top:18dvh;
+  height:49dvh;
+  z-index:3;
+  pointer-events:none;
+  opacity:.95;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.74) 0 8%, rgba(255,255,255,.40) 24%, transparent 60%),
+    linear-gradient(180deg, rgba(245,253,255,.48) 0%, rgba(245,253,255,.18) 38%, rgba(245,253,255,0) 100%);
+  mix-blend-mode:screen;
+}
+
+/* partikel embun halus */
+.weather-fog-particles{display:none!important;}
+#map::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:2;
+  background-image:
+    radial-gradient(circle at 18% 24%, rgba(255,255,255,.55) 0 1px, transparent 2px),
+    radial-gradient(circle at 39% 31%, rgba(255,255,255,.42) 0 1px, transparent 2px),
+    radial-gradient(circle at 62% 18%, rgba(255,255,255,.52) 0 1px, transparent 2px),
+    radial-gradient(circle at 83% 34%, rgba(255,255,255,.36) 0 1px, transparent 2px);
+  opacity:.48;
+}
+
+/* ukuran & anchor karakter: rambut aman, kaki tetap tepat di titik jalan */
+.maplibregl-marker.player-map-marker,
+.player-map-marker{
+  width:156px!important;
+  height:184px!important;
+  overflow:visible!important;
+  pointer-events:none!important;
+}
+.player-map-marker .player-ring{
+  width:118px!important;
+  height:82px!important;
+  left:50%!important;
+  top:75%!important;
+  border:3px solid rgba(87,232,255,.80)!important;
+  box-shadow:0 0 28px rgba(87,232,255,.34), inset 0 0 16px rgba(255,255,255,.22)!important;
+  transform:translate(-50%,-50%) rotateX(60deg)!important;
+}
+.player-map-marker .player-shadow{
+  width:58px!important;
+  height:17px!important;
+  left:50%!important;
+  top:86%!important;
+  transform:translate(-50%,-50%)!important;
+  background:rgba(17,38,79,.24)!important;
+  filter:blur(2px)!important;
+}
+.player-map-marker .player-sprite{
+  width:125px!important;
+  height:125px!important;
+  left:50%!important;
+  top:43%!important;
+  bottom:auto!important;
+  background-image:url("assets/sprout_character.png")!important;
+  background-repeat:no-repeat!important;
+  background-size:500px 500px!important;
+  background-position:var(--sprite-x,0px) var(--sprite-y,0px)!important;
+  transform:translate(-50%,-50%)!important;
+  animation:none!important;
+  image-rendering:auto!important;
+  overflow:visible!important;
+  filter:drop-shadow(0 14px 12px rgba(12,31,70,.25))!important;
+}
+.player-map-marker .player-sprite.idle,
+.player-map-marker .player-sprite.walk,
+.player-map-marker .player-sprite.run,
+.player-map-marker .player-sprite.face-left,
+.player-map-marker .player-sprite.face-right,
+.player-map-marker .player-sprite.face-up,
+.player-map-marker .player-sprite.face-down{
+  background-position:var(--sprite-x,0px) var(--sprite-y,0px)!important;
+  transform:translate(-50%,-50%)!important;
+  animation:none!important;
+}
+
+/* UI harus tetap di atas kabut */
+.top-left,.right-actions,.dpad,.bottom-card,.hub-btn,.sheet,.floating-toast,.modal{z-index:20!important;}
+
+
+/* =========================================================
+   V44.1 HOTFIX - FULLSCREEN MAP + REAL MAPLIBRE MARKER + REFERENCE CAMERA FX
+   Jangan hapus: ini override terakhir supaya tampilan TIDAK jadi phone preview sempit.
+========================================================= */
 html,body,#app{
   width:100vw!important;
-  height:100vh!important;
+  max-width:none!important;
+  min-width:0!important;
   height:100dvh!important;
-  max-width:none!important;
   margin:0!important;
-  background:#b7d9ef!important;
-}
-#app{
-  max-width:none!important;
   border-radius:0!important;
   box-shadow:none!important;
+  overflow:hidden!important;
+  background:#dff7ff!important;
 }
 #map{
   width:100vw!important;
   height:100dvh!important;
-  background:linear-gradient(180deg,#dcefff 0%,#c8ebff 42%,#99d78b 100%)!important;
+  inset:0!important;
 }
+.maplibregl-map,
+.maplibregl-canvas-container,
 .maplibregl-canvas{
-  filter:saturate(1.22) brightness(1.13) contrast(.86) hue-rotate(-7deg)!important;
+  width:100%!important;
+  height:100%!important;
 }
-.maplibregl-marker{
+
+/* Awan lebih tebal seperti referensi, tapi hanya di horizon/atas */
+#app::before{
+  content:""!important;
+  position:absolute!important;
+  left:-8vw!important;
+  right:-8vw!important;
+  top:-4dvh!important;
+  height:43dvh!important;
+  z-index:5!important;
+  pointer-events:none!important;
+  opacity:1!important;
+  background:
+    radial-gradient(ellipse at 5% 15%, rgba(255,255,255,.98) 0 12%, rgba(255,255,255,.84) 21%, rgba(255,255,255,.38) 36%, transparent 56%),
+    radial-gradient(ellipse at 20% 8%, rgba(255,255,255,.98) 0 15%, rgba(255,255,255,.78) 26%, rgba(255,255,255,.35) 43%, transparent 64%),
+    radial-gradient(ellipse at 40% 12%, rgba(255,255,255,1) 0 17%, rgba(255,255,255,.80) 28%, rgba(255,255,255,.38) 46%, transparent 68%),
+    radial-gradient(ellipse at 63% 10%, rgba(255,255,255,.98) 0 15%, rgba(255,255,255,.78) 27%, rgba(255,255,255,.36) 45%, transparent 66%),
+    radial-gradient(ellipse at 86% 12%, rgba(255,255,255,.98) 0 16%, rgba(255,255,255,.76) 28%, rgba(255,255,255,.34) 46%, transparent 68%),
+    linear-gradient(180deg, rgba(218,244,255,.96) 0%, rgba(235,252,255,.82) 38%, rgba(248,254,255,.42) 70%, rgba(248,254,255,0) 100%)!important;
+  filter:blur(.55px)!important;
+}
+#app::after{
+  content:""!important;
+  position:absolute!important;
+  left:0!important;right:0!important;top:19dvh!important;
+  height:48dvh!important;
+  z-index:4!important;
+  pointer-events:none!important;
+  opacity:.92!important;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.78) 0 9%, rgba(255,255,255,.44) 25%, transparent 62%),
+    linear-gradient(180deg, rgba(245,253,255,.50) 0%, rgba(245,253,255,.18) 42%, rgba(245,253,255,0) 100%)!important;
+  mix-blend-mode:screen!important;
+}
+.screen-vignette{z-index:3!important;}
+
+/* PENTING: MapLibre harus bebas mengatur transform marker via inline style. */
+.maplibregl-marker.player-map-marker,
+.player-map-marker{
+  width:168px!important;
+  height:196px!important;
+  overflow:visible!important;
+  pointer-events:none!important;
   will-change:transform!important;
-}
-.screen-vignette{
-  z-index:7!important;
-  background:
-    linear-gradient(180deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,.03) 30%,rgba(255,255,255,.02) 60%,rgba(0,0,0,.10) 100%),
-    radial-gradient(ellipse at 50% 72%,rgba(255,255,255,0) 0 42%,rgba(64,126,186,.10) 72%,rgba(10,25,50,.24) 100%)!important;
-}
-.horizon-cloud-fx{
-  position:absolute;
-  inset:0;
-  z-index:8;
-  pointer-events:none;
-  overflow:hidden;
-}
-.cloud-band{
-  position:absolute;
-  left:-10vw;
-  right:-10vw;
-  height:36vh;
-  top:-2vh;
-  opacity:.96;
-  background:
-    radial-gradient(ellipse at 6% 16%,rgba(255,255,255,.86) 0 9%,transparent 22%),
-    radial-gradient(ellipse at 18% 5%,rgba(255,255,255,.82) 0 13%,transparent 29%),
-    radial-gradient(ellipse at 33% 16%,rgba(255,255,255,.90) 0 11%,transparent 26%),
-    radial-gradient(ellipse at 50% 3%,rgba(255,255,255,.94) 0 16%,transparent 33%),
-    radial-gradient(ellipse at 67% 14%,rgba(255,255,255,.88) 0 13%,transparent 31%),
-    radial-gradient(ellipse at 83% 4%,rgba(255,255,255,.94) 0 15%,transparent 34%),
-    radial-gradient(ellipse at 96% 15%,rgba(255,255,255,.86) 0 10%,transparent 27%);
-  filter:blur(2px);
-  animation:cloudDriftA 18s ease-in-out infinite alternate;
-}
-.cloud-band-b{
-  top:8vh;
-  height:30vh;
-  opacity:.72;
-  transform:scaleX(1.08);
-  filter:blur(8px);
-  animation-duration:26s;
-  animation-direction:alternate-reverse;
-}
-@keyframes cloudDriftA{
-  from{transform:translateX(-1.8vw) translateY(0)}
-  to{transform:translateX(2.2vw) translateY(1vh)}
-}
-.mist-layer{
-  position:absolute;
-  left:-5vw;
-  right:-5vw;
-  top:18vh;
-  height:46vh;
-  background:
-    linear-gradient(180deg,rgba(255,255,255,.68),rgba(255,255,255,.50) 34%,rgba(255,255,255,.18) 65%,transparent 100%),
-    radial-gradient(ellipse at 52% 20%,rgba(255,255,255,.72) 0 16%,transparent 48%),
-    radial-gradient(ellipse at 15% 42%,rgba(255,255,255,.42) 0 18%,transparent 52%),
-    radial-gradient(ellipse at 82% 39%,rgba(255,255,255,.48) 0 22%,transparent 58%);
-  filter:blur(8px);
-  opacity:.92;
-  animation:mistBreath 8s ease-in-out infinite;
-}
-.mist-layer-b{
-  top:31vh;
-  height:38vh;
-  opacity:.40;
-  filter:blur(15px);
-  animation-duration:12s;
-}
-@keyframes mistBreath{
-  0%,100%{opacity:.78;transform:translateY(0) scale(1)}
-  50%{opacity:.98;transform:translateY(1.2vh) scale(1.02)}
-}
-.snow-dust{
-  position:absolute;
-  inset:0;
-  opacity:.50;
-  background-image:
-    radial-gradient(circle,rgba(255,255,255,.88) 0 1px,transparent 2px),
-    radial-gradient(circle,rgba(255,255,255,.55) 0 1px,transparent 2px);
-  background-size:110px 90px,170px 130px;
-  animation:dustFloat 14s linear infinite;
-}
-@keyframes dustFloat{to{background-position:80px 120px,-70px 90px}}
-
-/* HUD kiri atas persis gaya referensi */
-.top-status.compact-status{
-  left:12px!important;
-  top:10px!important;
-  width:184px!important;
-  max-width:184px!important;
-  padding:10px 13px!important;
-  border-radius:18px!important;
-  transform:none!important;
-  text-align:left!important;
-  background:linear-gradient(180deg,rgba(32,70,142,.82),rgba(25,48,105,.72))!important;
-  border:1px solid rgba(255,255,255,.18)!important;
-  box-shadow:0 14px 28px rgba(12,28,67,.22), inset 0 1px 0 rgba(255,255,255,.18)!important;
-}
-.top-status .status-row{font-size:15px!important;line-height:1!important;font-weight:1000!important;text-shadow:0 2px 5px rgba(0,0,0,.22)}
-.top-status .status-sub{font-size:11px!important;margin-top:7px!important;color:#f4fbff!important;max-width:none!important;opacity:.98!important;font-weight:850!important;}
-.live-dot{width:10px!important;height:10px!important;box-shadow:0 0 14px rgba(35,255,114,.8)!important;}
-.top-actions{
-  left:12px!important;
-  right:auto!important;
-  top:68px!important;
-  gap:10px!important;
-  padding:0!important;
-  overflow:visible!important;
-}
-.pill{
-  min-width:92px!important;
-  height:34px!important;
-  padding:7px 18px!important;
-  border-radius:999px!important;
-  font-size:13px!important;
-  font-weight:1000!important;
-  color:#fff!important;
-  background:linear-gradient(180deg,rgba(83,154,255,.92),rgba(45,106,218,.84))!important;
-  border:1px solid rgba(255,255,255,.22)!important;
-  box-shadow:0 10px 22px rgba(36,92,190,.27), inset 0 1px 0 rgba(255,255,255,.35)!important;
-}
-
-/* Posisi karakter: tetap map marker, tapi ukuran/anchor dibuat seperti referensi */
-.maplibregl-marker.player-map-marker,.player-map-marker{
-  width:128px!important;
-  height:164px!important;
-  z-index:82!important;
-  filter:drop-shadow(0 20px 22px rgba(9,25,62,.30))!important;
+  z-index:15!important;
 }
 .player-map-marker .player-ring{
-  width:112px!important;
-  height:112px!important;
-  top:73%!important;
-  border:3px solid rgba(77,212,255,.72)!important;
-  box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 0 30px rgba(80,202,255,.32)!important;
-}
-.player-map-marker .player-shadow{top:92%!important;width:54px!important;height:16px!important;background:rgba(13,32,70,.24)!important;filter:blur(2px)!important;}
-.player-map-marker .player-sprite{
-  width:112px!important;
-  height:112px!important;
-  background-size:448px 448px!important;
-  top:55%!important;
-  transform:translate(-50%,-50%)!important;
-}
-.player-map-marker .player-sprite.idle,
-.player-map-marker .player-sprite.walk,
-.player-map-marker .player-sprite.run,
-.player-map-marker .player-sprite.face-left,
-.player-map-marker .player-sprite.face-right,
-.player-map-marker .player-sprite.face-up,
-.player-map-marker .player-sprite.face-down{
-  transform:translate(-50%,-50%)!important;
-}
-
-/* Tombol kanan + kompas */
-.fab-locate{
-  right:20px!important;
-  bottom:160px!important;
-  width:58px!important;
-  height:58px!important;
-  border-radius:18px!important;
-  background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(222,236,254,.88))!important;
-  color:#183b75!important;
-  box-shadow:0 16px 28px rgba(13,34,78,.20)!important;
-}
-.fab-compass{
-  display:flex!important;
-  right:20px!important;
-  top:16px!important;
-  width:76px!important;
-  height:76px!important;
-  border-radius:50%!important;
-  background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.96),rgba(216,229,244,.78))!important;
-  box-shadow:0 18px 35px rgba(22,48,95,.20), inset 0 0 0 1px rgba(255,255,255,.50)!important;
-  color:transparent!important;
-}
-.fab-compass::before{
-  content:"";
-  position:absolute;
-  left:50%;top:50%;
-  width:0;height:0;
-  transform:translate(-50%,-56%);
-  border-left:8px solid transparent;
-  border-right:8px solid transparent;
-  border-bottom:31px solid #e7353e;
-  filter:drop-shadow(0 3px 2px rgba(0,0,0,.22));
-}
-.fab-compass::after{
-  content:"";
-  position:absolute;
-  left:50%;top:50%;
-  width:0;height:0;
-  transform:translate(-50%,12%) rotate(180deg);
-  border-left:8px solid transparent;
-  border-right:8px solid transparent;
-  border-bottom:31px solid rgba(255,255,255,.92);
-}
-.fab-compass span{display:none!important;}
-.mapdex-action{right:18px!important;bottom:92px!important;width:68px!important;height:74px!important;border-radius:20px!important;}
-.dex-action{right:18px!important;bottom:18px!important;width:76px!important;height:56px!important;border-radius:18px!important;}
-.sheet-mini-btn{right:18px!important;bottom:128px!important;background:linear-gradient(180deg,#234a87,#1d326c)!important;color:#fff!important;}
-
-/* D-pad kiri dan profile bawah */
-.move-pad{
-  left:12px!important;
-  bottom:92px!important;
-  width:112px!important;
-  height:112px!important;
-  background:radial-gradient(circle,rgba(255,255,255,.58),rgba(255,255,255,.16) 68%,rgba(255,255,255,.08))!important;
-  border:1px solid rgba(255,255,255,.34)!important;
-  box-shadow:0 18px 34px rgba(20,44,92,.22)!important;
-}
-.move-btn{width:42px!important;height:42px!important;background:linear-gradient(180deg,#fff,#edf5ff)!important;color:#173e79!important;}
-.bottom-left-profile{
-  left:12px!important;
-  bottom:18px!important;
-  min-width:205px!important;
-  height:66px!important;
-  border-radius:20px!important;
-  background:linear-gradient(180deg,rgba(26,68,139,.90),rgba(19,50,108,.84))!important;
-  border:1px solid rgba(255,255,255,.20)!important;
-  box-shadow:0 15px 32px rgba(14,35,83,.30)!important;
-}
-.bottom-left-profile::before{content:"JALAN LINTASAN";position:absolute;left:0;top:-20px;font-size:11px;font-weight:1000;letter-spacing:.08em;text-shadow:0 2px 6px rgba(0,0,0,.55)}
-.trainer-level{color:#ffd84f!important;font-size:12px!important;text-transform:uppercase!important;}
-.trainer-name{font-size:12px!important;}
-.main-action{bottom:18px!important;width:72px!important;height:72px!important;}
-.main-action::before{content:"HUB"!important;bottom:-18px!important;font-size:10px!important;}
-
-/* Checklist hitam bawah seperti gambar referensi */
-.reference-checklist{
-  position:absolute;
-  left:0;right:0;bottom:0;
-  z-index:70;
-  min-height:86px;
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:34px;
-  padding:12px 26px 10px;
-  background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.72) 18%,rgba(8,9,12,.92) 100%);
-  pointer-events:none;
-}
-.ref-card{
-  min-height:66px;
-  border-radius:23px;
-  padding:12px 18px;
-  background:rgba(18,18,18,.36);
-  border:2px solid rgba(255,255,255,.16);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
-  font-size:13px;
-  text-shadow:0 2px 5px rgba(0,0,0,.35);
-}
-.ref-card b{display:block;font-size:13px;line-height:1.2;margin-bottom:5px;color:#f7fbff;white-space:nowrap;}
-.ref-card b::first-letter{color:#39e88b;}
-.ref-card span{display:block;color:#f6f6f6;line-height:1.34;font-weight:650;opacity:.96;}
-
-/* POI icon dan label lebih mirip game referensi */
-.poi-label,.maplibregl-popup-content{text-shadow:0 2px 5px rgba(0,0,0,.55)!important;}
-.portal-marker,.npc{filter:drop-shadow(0 4px 5px rgba(15,27,50,.28))!important;}
-
-@media (orientation:portrait){
-  .reference-checklist{display:none!important;}
-  .top-status.compact-status{width:166px!important;max-width:166px!important;}
-  .top-actions{right:8px!important;overflow-x:auto!important;}
-  .fab-compass{width:64px!important;height:64px!important;}
-}
-@media (max-width:820px){
-  .reference-checklist{gap:8px;padding:10px 10px;grid-template-columns:repeat(2,minmax(0,1fr));}
-  .ref-card{font-size:11px;padding:9px 11px;min-height:56px;border-radius:18px;}
-  .ref-card b{font-size:11px;white-space:normal;}
-}
-@media (min-width:760px){
-  #app{max-width:none!important;margin:0!important;border-radius:0!important;box-shadow:none!important;}
-}
-
-
-/* ===== v45 weather + cleanup overrides ===== */
-.reference-checklist{display:none!important;}
-#bottomSheet.hidden-sheet{display:none!important;}
-#bottomSheet.hidden-sheet + *{}
-.weather-chip{
-  position:absolute;
-  top:12px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:120;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-width:250px;
-  max-width:min(62vw,360px);
-  padding:11px 16px;
-  border-radius:24px;
-  background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(190,220,255,.18));
-  border:1px solid rgba(255,255,255,.38);
-  box-shadow:0 18px 34px rgba(17,42,86,.18), inset 0 1px 0 rgba(255,255,255,.35);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-  color:#fff;
-  text-shadow:0 2px 8px rgba(0,0,0,.18);
-  pointer-events:none;
-}
-.weather-main{display:flex;align-items:center;gap:12px;}
-.weather-icon{font-size:28px;line-height:1;}
-.weather-info{display:flex;flex-direction:column;gap:3px;}
-.weather-info b{font-size:18px;font-weight:1000;margin-right:6px;}
-.weather-info span{font-size:14px;font-weight:800;opacity:.96;}
-.weather-info small{font-size:12px;font-weight:800;opacity:.9;color:#f4fbff;}
-
-.rain-fx,.night-overlay{position:absolute;inset:0;pointer-events:none;z-index:9;}
-.night-overlay{opacity:0;transition:opacity .45s ease;background:linear-gradient(180deg,rgba(5,12,34,.18) 0%,rgba(7,16,38,.04) 26%,rgba(3,10,30,.24) 100%),radial-gradient(circle at 50% 12%,rgba(114,142,255,.18),transparent 38%),radial-gradient(circle at 50% 115%,rgba(0,0,0,.18),rgba(0,0,0,.48));}
-.rain-fx{opacity:0;transition:opacity .35s ease;}
-.rain-layer{position:absolute;inset:-20%;background-repeat:repeat;transform:skewX(-14deg);}
-.rain-back{opacity:.22;background-image:repeating-linear-gradient(to bottom,rgba(255,255,255,.62) 0 10px,transparent 10px 28px);background-size:3px 28px;animation:rainFallBack .65s linear infinite;}
-.rain-front{opacity:.34;background-image:repeating-linear-gradient(to bottom,rgba(255,255,255,.95) 0 15px,transparent 15px 34px);background-size:2px 34px;animation:rainFallFront .42s linear infinite;}
-@keyframes rainFallBack{from{background-position:0 -120px;}to{background-position:-35px 240px;}}
-@keyframes rainFallFront{from{background-position:0 -160px;}to{background-position:-52px 320px;}}
-body.weather-rain .rain-fx, #app.weather-rain .rain-fx{opacity:1;}
-body.is-night .night-overlay, #app.is-night .night-overlay{opacity:1;}
-body.is-night .weather-chip{background:linear-gradient(180deg,rgba(25,40,83,.52),rgba(16,27,62,.36));}
-body.is-night .top-status.compact-status{background:linear-gradient(180deg,rgba(16,35,78,.88),rgba(10,24,57,.78))!important;}
-body.is-night .pill{background:linear-gradient(180deg,rgba(73,111,194,.92),rgba(34,68,154,.86))!important;}
-body.is-night .screen-vignette{background:linear-gradient(180deg,rgba(10,18,38,.28) 0%,rgba(7,14,32,.08) 28%,rgba(7,10,24,.12) 60%,rgba(0,0,0,.24) 100%),radial-gradient(ellipse at 50% 72%,rgba(255,255,255,0) 0 42%,rgba(64,126,186,.08) 72%,rgba(2,7,20,.38) 100%)!important;}
-body.is-night .horizon-cloud-fx{opacity:.74;}
-body.is-night .maplibregl-canvas{filter:saturate(1.05) brightness(.72) contrast(1.04) hue-rotate(0deg)!important;}
-body.weather-rain .maplibregl-canvas{filter:saturate(1.08) brightness(.94) contrast(.98)!important;}
-
-.player-map-marker{overflow:visible!important;}
-.player-map-marker .player-sprite{
-  width:100px!important;
-  height:100px!important;
-  background-size:500px 500px!important;
-  background-repeat:no-repeat!important;
+  width:126px!important;
+  height:86px!important;
   left:50%!important;
-  top:54%!important;
+  top:76%!important;
+  transform:translate(-50%,-50%) rotateX(60deg)!important;
+}
+.player-map-marker .player-shadow{
+  width:62px!important;
+  height:18px!important;
+  left:50%!important;
+  top:87%!important;
   transform:translate(-50%,-50%)!important;
-  image-rendering:auto!important;
-  filter:drop-shadow(0 10px 10px rgba(13,35,70,.22));
 }
-.player-map-marker .player-sprite.idle,.player-map-marker .player-sprite.walk,.player-map-marker .player-sprite.run,.player-map-marker .player-sprite.face-left,.player-map-marker .player-sprite.face-right,.player-map-marker .player-sprite.face-up,.player-map-marker .player-sprite.face-down{background-position:var(--sprite-x,0px) var(--sprite-y,0px)!important;transform:translate(-50%,-50%)!important;}
-.player-map-marker .player-ring{top:76%!important;}
-.player-map-marker .player-shadow{top:92%!important;}
-
-#map{background:linear-gradient(180deg,#dcefff 0%,#c8ebff 30%,#8fda8d 100%)!important;}
-.maplibregl-canvas{filter:saturate(1.28) brightness(1.08) contrast(.95) hue-rotate(-8deg)!important;}
-.top-status.compact-status,.pill,.bottom-left-profile,.move-pad,.fab-locate,.fab-compass,.mapdex-action,.dex-action{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
-.horizon-cloud-fx::after{content:"";position:absolute;left:0;right:0;bottom:0;height:26vh;background:linear-gradient(180deg,transparent,rgba(255,255,255,.18));}
-@media (max-width:900px){
-  .weather-chip{min-width:200px;max-width:58vw;padding:10px 14px;}
-}
-@media (max-width:640px){
-  .weather-chip{top:12px;left:auto;right:12px;transform:none;max-width:52vw;min-width:unset;}
-  .weather-icon{font-size:24px;}
-  .weather-info b{font-size:16px;}
-  .weather-info span{font-size:12px;}
-  .weather-info small{font-size:10px;}
-}
-
-
-/* ===== v46 final cleanup ===== */
-.player-anchor,.scan-ring{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
-#app::after{content:none!important;}
-.screen-vignette{
-  background:
-    linear-gradient(180deg,rgba(255,255,255,.08) 0%,rgba(255,255,255,.02) 26%,rgba(255,255,255,0) 55%,rgba(0,0,0,.08) 100%),
-    radial-gradient(ellipse at 50% 76%,rgba(255,255,255,0) 0 46%,rgba(64,126,186,.06) 72%,rgba(10,25,50,.16) 100%)!important;
-}
-.cloud-band{top:-10vh!important;height:24vh!important;opacity:.84!important;filter:blur(4px)!important;}
-.cloud-band-b{top:0vh!important;height:22vh!important;opacity:.56!important;filter:blur(10px)!important;}
-.mist-layer{top:8vh!important;height:20vh!important;opacity:.34!important;filter:blur(10px)!important;}
-.mist-layer-b{top:14vh!important;height:16vh!important;opacity:.16!important;filter:blur(18px)!important;}
-.snow-dust{opacity:.14!important;}
-.horizon-cloud-fx::after{content:"";position:absolute;left:0;right:0;top:16vh;height:14vh;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0));pointer-events:none;}
-
-/* rain dibuat tipis supaya tidak muncul garis aneh */
-.rain-back{opacity:.16!important;background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.45) 0 2px,transparent 2px 18px)!important;background-size:22px 22px!important;animation:rainDiagBack .7s linear infinite!important;}
-.rain-front{opacity:.24!important;background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.72) 0 2px,transparent 2px 12px)!important;background-size:16px 16px!important;animation:rainDiagFront .42s linear infinite!important;}
-@keyframes rainDiagBack{from{background-position:0 0;}to{background-position:-36px 72px;}}
-@keyframes rainDiagFront{from{background-position:0 0;}to{background-position:-52px 104px;}}
-
-#map{background:linear-gradient(180deg,#d8efff 0%,#c0e6ff 26%,#8fd986 100%)!important;}
-.maplibregl-canvas{filter:saturate(1.18) brightness(1.01) contrast(1.03) hue-rotate(-4deg)!important;}
-body.is-night .maplibregl-canvas{filter:saturate(1.00) brightness(.74) contrast(1.06)!important;}
-body.weather-rain .maplibregl-canvas{filter:saturate(1.04) brightness(.92) contrast(1.02)!important;}
-
-.maplibregl-marker.player-map-marker,.player-map-marker{
-  width:116px!important;
-  height:146px!important;
-  z-index:90!important;
-  filter:drop-shadow(0 14px 20px rgba(14,35,79,.26))!important;
+.player-map-marker .player-sprite{
+  width:132px!important;
+  height:132px!important;
+  left:50%!important;
+  top:42%!important;
+  background-size:528px 528px!important;
+  transform:translate(-50%,-50%)!important;
   overflow:visible!important;
 }
-.player-map-marker .player-ring{
-  width:102px!important;height:102px!important;left:50%!important;top:78%!important;
-  transform:translate(-50%,-50%)!important;
-  border:3px solid rgba(88,214,255,.72)!important;
-  box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 0 24px rgba(80,202,255,.24)!important;
-}
-.player-map-marker .player-shadow{
-  width:42px!important;height:12px!important;left:50%!important;top:94%!important;
-  transform:translate(-50%,-50%)!important;
-  background:rgba(9,23,54,.16)!important;filter:blur(3px)!important;
-}
-.player-map-marker .player-sprite{
-  width:100px!important;height:100px!important;
-  left:50%!important;top:49%!important;
-  transform:translate(-50%,-50%)!important;
-  background-image:url("assets/sprout_character.png")!important;
-  background-size:500px 500px!important;
-  background-repeat:no-repeat!important;
-  image-rendering:auto!important;
-}
-.player-map-marker .player-sprite.idle,.player-map-marker .player-sprite.walk,.player-map-marker .player-sprite.run,.player-map-marker .player-sprite.face-left,.player-map-marker .player-sprite.face-right,.player-map-marker .player-sprite.face-up,.player-map-marker .player-sprite.face-down{
-  background-position:var(--sprite-x,0px) var(--sprite-y,0px)!important;
-  transform:translate(-50%,-50%)!important;
-  animation:none!important;
-}
 
-.weather-chip{min-width:232px!important;top:14px!important;}
-.top-status.compact-status{top:14px!important;}
-.top-actions{top:74px!important;}
-.bottom-left-profile{bottom:20px!important;}
-.main-action{bottom:20px!important;}
-.move-pad{bottom:106px!important;}
-.mapdex-action{bottom:100px!important;}
-.dex-action{bottom:22px!important;}
-
-@media (max-width:820px){
-  .weather-chip{min-width:190px!important;max-width:54vw!important;}
-}
-
-
-/* ===== v47 character ui + chat + portal event ===== */
-body, #app { overflow:hidden; }
-.sheet-mini-btn{display:none!important;}
-.player-name-tag{position:absolute;left:50%;top:8px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:linear-gradient(180deg,rgba(15,25,58,.88),rgba(19,44,90,.72));border:1px solid rgba(255,255,255,.24);box-shadow:0 10px 20px rgba(7,21,52,.24);color:#fff;font-weight:1000;font-size:12px;white-space:nowrap;backdrop-filter:blur(8px);}
-.player-name-tag span{font-size:11px;color:#79f0ff;}
-.mapdex-action{display:flex!important;align-items:center!important;justify-content:center!important;flex-direction:column!important;padding:6px!important;overflow:visible!important;}
-.mapdex-action .mapdex-asset{display:block;width:62px;height:62px;background:url("assets/ui/mapdex-device.png") center/contain no-repeat;filter:drop-shadow(0 8px 12px rgba(27,57,118,.28));animation:mapDexFloat 2.8s ease-in-out infinite;}
-.mapdex-action small{margin-top:-2px;font-weight:1000;letter-spacing:.02em;}
-@keyframes mapDexFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.03)}}
-.dex-action{display:flex!important;align-items:center!important;justify-content:center!important;padding:0 10px!important;}
-.dex-action .dex-icon{font-size:13px!important;line-height:1.1!important;font-weight:1000!important;}
-.chat-toggle{position:absolute;right:106px;bottom:22px;z-index:82;width:78px;height:56px;border:none;border-radius:18px;cursor:pointer;color:#fff;font-weight:1000;background:linear-gradient(180deg,rgba(95,158,255,.48),rgba(65,107,209,.24));border:1px solid rgba(255,255,255,.22);box-shadow:0 16px 30px rgba(14,30,77,.24), inset 0 1px 0 rgba(255,255,255,.16);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);}
-.chat-toggle::before{content:"✦";display:block;font-size:13px;color:#8ff3ff;margin-bottom:2px;}
-.anime-chat-dock{position:absolute;right:18px;bottom:88px;width:min(320px,28vw);height:260px;z-index:82;border-radius:28px;padding:14px 14px 12px;background:linear-gradient(180deg,rgba(17,28,61,.42),rgba(16,23,49,.18));border:1px solid rgba(255,255,255,.16);box-shadow:0 20px 50px rgba(4,17,45,.28), inset 0 1px 0 rgba(255,255,255,.15);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);color:#f8fbff;transform-origin:100% 100%;transition:transform .24s ease, opacity .24s ease;opacity:1;}
-.anime-chat-dock.collapsed{transform:translateY(10px) scale(.92);opacity:.18;pointer-events:none;}
-.chat-dock-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;}
-.chat-dock-head b{display:block;font-size:16px;}
-.chat-dock-head small{display:block;font-size:11px;opacity:.82;}
-.chat-close-btn{width:30px;height:30px;border:none;border-radius:50%;cursor:pointer;background:rgba(255,255,255,.12);color:#fff;font-size:18px;}
-.chat-dock-body{height:calc(100% - 44px);border-radius:22px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:1px dashed rgba(143,240,255,.28);position:relative;overflow:hidden;}
-.chat-dock-body::before{content:"";position:absolute;inset:auto -30% -30% auto;width:180px;height:180px;background:radial-gradient(circle,rgba(109,229,255,.16),transparent 68%);animation:chatGlow 3s ease-in-out infinite;}
-.chat-placeholder-orb{width:68px;height:68px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff, #8cd8ff 34%, #6177ff 68%, #b56fff 100%);box-shadow:0 0 26px rgba(135,219,255,.42);margin-bottom:12px;animation:chatOrb 2.6s ease-in-out infinite;}
-@keyframes chatOrb{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-@keyframes chatGlow{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
-.character-modal-card{max-width:780px;margin:0 auto;border-radius:28px!important;background:linear-gradient(180deg,#fefefe,#edf4ff)!important;}
-.character-profile-hero{display:grid;grid-template-columns:140px 1fr;gap:18px;align-items:center;padding:8px 4px 16px;}
-.character-avatar-big{width:132px;height:132px;border-radius:28px;background:linear-gradient(180deg,rgba(13,27,63,.94),rgba(28,73,142,.78)), url("assets/sprout_character.png") center 18px/170px 170px no-repeat;box-shadow:0 16px 32px rgba(18,42,92,.22);}
-.character-hero-meta h4{margin:0 0 8px;font-size:26px;color:#11294f;}
-.profile-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
-.character-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:14px;}
-.character-stat{padding:14px;border-radius:20px;background:linear-gradient(180deg,#fff,#f5f9ff);border:1px solid #dae7fb;}
-.character-stat span{display:block;font-size:12px;color:#6d7f98;margin-bottom:6px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;}
-.character-stat strong{font-size:18px;color:#173563;}
-.character-profile-section{padding:16px;border-radius:22px;background:linear-gradient(180deg,#fff,#f6f9ff);border:1px solid #dbe7f4;}
-.event-portal-marker{position:relative;width:128px;height:176px;border:none;background:transparent;cursor:pointer;pointer-events:auto;}
-.event-portal-core{position:absolute;left:50%;top:66%;width:84px;height:84px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.92),rgba(255,169,210,.54) 30%,rgba(255,68,130,.18) 58%,transparent 70%);filter:blur(1px);animation:eventPulse 1.8s ease-out infinite;}
-.event-portal-img{position:absolute;left:50%;bottom:18px;width:120px;height:160px;transform:translateX(-50%);background:url("assets/ui/event-portal.png") center/contain no-repeat;filter:drop-shadow(0 14px 22px rgba(126,16,63,.30));animation:eventFloat 2.8s ease-in-out infinite;}
-.event-portal-marker.macet .event-portal-core{background:radial-gradient(circle,rgba(255,255,255,.96),rgba(255,130,98,.58) 30%,rgba(255,86,30,.18) 60%,transparent 72%);}
-.event-portal-label{position:absolute;left:50%;top:6px;transform:translateX(-50%);padding:5px 10px;border-radius:999px;background:rgba(20,26,58,.82);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:1000;font-size:12px;white-space:nowrap;}
-@keyframes eventFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-6px)}}
-@keyframes eventPulse{0%{transform:translate(-50%,-50%) scale(.6);opacity:.9}100%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
-.player-map-marker .player-sprite{top:51%!important;}
-.player-map-marker .player-ring{top:80%!important;}
-.player-map-marker .player-shadow{top:95%!important;}
-.mist-layer,.mist-layer-b,.snow-dust{opacity:.03!important;}
-.rain-fx{opacity:0!important;}
-body.weather-rain .rain-fx,#app.weather-rain .rain-fx{opacity:.24!important;}
-.cloud-band{opacity:.26!important;top:-15vh!important;height:18vh!important;}
-.cloud-band-b{opacity:.14!important;top:-8vh!important;height:14vh!important;}
-.top-status.compact-status{max-width:220px!important;}
-.top-actions{gap:8px!important;}
-.fab-locate{right:18px!important;bottom:186px!important;}
-.mapdex-action{right:16px!important;bottom:106px!important;width:84px!important;height:92px!important;border-radius:24px!important;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(229,241,255,.90))!important;}
-.dex-action{right:16px!important;bottom:22px!important;width:84px!important;height:58px!important;}
-@media (max-width:980px){ .anime-chat-dock{width:min(300px,54vw);} }
-@media (max-width:760px){ .anime-chat-dock{width:min(280px,72vw);height:220px;right:10px;bottom:82px;} .chat-toggle{right:98px;bottom:20px;width:72px;height:52px;} .character-profile-hero{grid-template-columns:1fr;} .character-avatar-big{margin:0 auto;} .character-stat-grid{grid-template-columns:1fr;} }
-
-
-/* ===== v48 request fixes ===== */
-.sheet-mini-btn{display:none!important;}
-/* Hapus gambar explorer/avatar di pojok kiri, sisakan kartu level saja */
-.trainer-avatar-ui{display:none!important;}
-.bottom-left-profile{min-width:160px!important;padding-left:14px!important;}
-.bottom-left-profile::before{display:none!important;}
-.trainer-meta{min-width:130px!important;margin-left:0!important;}
-
-/* MapDex pakai gambar device, bukan layer panel */
-.mapdex-action{
-  background:rgba(255,255,255,.20)!important;
-  border:1px solid rgba(255,255,255,.32)!important;
-  box-shadow:0 16px 30px rgba(12,32,75,.18), inset 0 1px 0 rgba(255,255,255,.38)!important;
-  backdrop-filter:blur(10px)!important;
-}
-.mapdex-action .mapdex-asset{
-  display:block!important;
-  width:44px!important;
-  height:36px!important;
-  margin:auto!important;
-  background:url("assets/ui/mapdex-device.png") center/contain no-repeat!important;
-  filter:drop-shadow(0 5px 8px rgba(12,33,78,.28)) saturate(1.15);
-  animation:mapdexFloat 2.4s ease-in-out infinite;
-}
-.mapdex-action small{font-size:10px!important;color:#173a75!important;text-shadow:none!important;}
-@keyframes mapdexFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-3px) scale(1.05)}}
-
-/* Karakter lebih stabil: tidak miring, tidak bocor frame */
-.maplibregl-marker.player-map-marker,.player-map-marker{
-  width:112px!important;height:146px!important;overflow:visible!important;
-}
-.player-map-marker .player-sprite{
-  width:100px!important;height:100px!important;
-  left:50%!important;top:48%!important;
-  background-size:500px 500px!important;
-  background-repeat:no-repeat!important;
-  overflow:hidden!important;
-  transform:translate(-50%,-50%)!important;
-  image-rendering:auto!important;
-}
-.player-map-marker .player-sprite.idle,.player-map-marker .player-sprite.walk,.player-map-marker .player-sprite.run,.player-map-marker .player-sprite.face-left,.player-map-marker .player-sprite.face-right,.player-map-marker .player-sprite.face-up,.player-map-marker .player-sprite.face-down{
-  background-position:var(--sprite-x,-200px) var(--sprite-y,0px)!important;
-  transform:translate(-50%,-50%)!important;
-  animation:none!important;
-}
-.player-map-marker .player-shadow{
-  width:36px!important;height:10px!important;top:90%!important;
-  background:rgba(5,20,40,.14)!important;filter:blur(3px)!important;
-}
-.player-map-marker .player-ring{top:76%!important;width:94px!important;height:94px!important;}
-
-/* Weather tidak lebay */
-.horizon-cloud-fx{opacity:.16!important;}
-.cloud-band,.cloud-band-b,.mist-layer,.mist-layer-b{display:none!important;}
-.snow-dust{display:none!important;}
-body.weather-rain .rain-fx,#app.weather-rain .rain-fx{opacity:.18!important;}
-body:not(.weather-rain) .rain-fx{display:none!important;}
-.screen-vignette{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0) 50%,rgba(0,0,0,.06))!important;}
-.maplibregl-canvas{filter:saturate(1.10) brightness(1.04) contrast(1.03)!important;}
-
-/* Zoom mentok: UI tetap kebaca */
-.top-status.compact-status{z-index:145!important;}
-.top-actions{z-index:145!important;}
-.weather-chip{z-index:145!important;background:linear-gradient(180deg,rgba(255,255,255,.48),rgba(196,222,252,.32))!important;color:#fff!important;}
-
-/* Portal event: satu portal pajangan, animated */
-.event-portal-marker.single-event{
-  width:96px!important;height:126px!important;border:0!important;background:transparent!important;
-  cursor:pointer;position:relative;filter:drop-shadow(0 16px 16px rgba(127,22,42,.32));
-}
-.event-portal-marker.single-event .event-portal-img{
-  position:absolute;left:50%;bottom:0;width:90px;height:120px;transform:translateX(-50%);
-  background:url("assets/ui/event-portal.png") center/contain no-repeat!important;
-  animation:portalPulseV48 1.8s ease-in-out infinite;
-}
-.event-portal-marker.single-event .event-portal-core{
-  position:absolute;left:50%;bottom:24px;width:74px;height:32px;border-radius:50%;
-  transform:translateX(-50%);
-  background:radial-gradient(circle,rgba(255,80,140,.55),rgba(255,35,90,0) 70%);
-  animation:portalAuraV48 1.4s ease-in-out infinite;
-}
-.event-portal-marker.single-event .event-portal-label{
-  position:absolute;left:50%;top:-22px;transform:translateX(-50%);
-  white-space:nowrap;padding:6px 12px;border-radius:999px;
-  background:rgba(42,46,70,.88);color:#fff;font-size:12px;font-weight:900;
-  box-shadow:0 8px 14px rgba(0,0,0,.22);
-}
-.event-portal-marker.single-event .event-portal-hint{
-  position:absolute;left:50%;bottom:-18px;transform:translateX(-50%);
-  white-space:nowrap;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.78);
-  color:#9d174d;font-size:10px;font-weight:900;
-}
-@keyframes portalPulseV48{0%,100%{transform:translateX(-50%) translateY(0) scale(1)}50%{transform:translateX(-50%) translateY(-5px) scale(1.06)}}
-@keyframes portalAuraV48{0%,100%{opacity:.5;transform:translateX(-50%) scale(.9)}50%{opacity:1;transform:translateX(-50%) scale(1.22)}}
-
-/* Chat anime transparan */
-.chat-panel{
-  background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(138,196,255,.10))!important;
-  border:1px solid rgba(255,255,255,.26)!important;
-  box-shadow:0 22px 44px rgba(18,44,92,.16)!important;
-  backdrop-filter:blur(14px)!important;
-  -webkit-backdrop-filter:blur(14px)!important;
-}
-.chat-toggle{background:linear-gradient(135deg,rgba(96,165,250,.76),rgba(199,210,254,.60))!important;}
-
-/* Route direction */
-#map .maplibregl-canvas-container{outline:none!important;}
-
-
-/* ===== v49 final revision ===== */
-/* buang menu silang dan kartu explorer pojok kiri */
-.top-actions,
-.reference-checklist,
-.bottom-left-profile,
-.sheet-mini-btn{display:none !important;}
-
-/* chat pindah ke atas */
-.chat-toggle{
-  position:absolute !important;
-  top:14px !important;
-  right:14px !important;
-  bottom:auto !important;
-  z-index:160 !important;
-  min-width:74px !important;
-  height:42px !important;
-  border-radius:16px !important;
-}
-.anime-chat-dock{
-  position:absolute !important;
-  top:64px !important;
-  right:14px !important;
-  bottom:auto !important;
-  width:300px !important;
-  min-height:108px !important;
-  border-radius:22px !important;
-  z-index:158 !important;
-}
-.anime-chat-dock.collapsed{transform:translateY(-8px) scale(.98); opacity:0; pointer-events:none;}
-.chat-dock-head{padding:12px 14px 8px !important;}
-.chat-dock-body{padding:8px 14px 14px !important;}
-
-/* mapdex & character buttons rapih */
-.mapdex-action{right:16px !important; bottom:110px !important; width:84px !important; height:86px !important;}
-.dex-action{right:16px !important; bottom:18px !important; width:86px !important; height:58px !important;}
-.fab-locate{right:16px !important; bottom:212px !important;}
-.fab-compass{top:14px !important; right:118px !important; bottom:auto !important;}
-.main-action{bottom:18px !important; left:50% !important; transform:translateX(-50%) !important;}
-.move-pad{bottom:96px !important; left:16px !important;}
-
-/* tombol arahkan */
-.sheet-route-btn{
-  margin-top:16px !important;
-  appearance:none; border:none; cursor:pointer;
-  display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  padding:12px 18px !important; border-radius:999px !important;
-  background:linear-gradient(180deg,#49d5ff,#1579ff) !important;
-  color:#fff !important; font-weight:1000 !important; letter-spacing:.02em;
-  box-shadow:0 12px 24px rgba(21,121,255,.28), inset 0 1px 0 rgba(255,255,255,.38) !important;
-}
-.sheet-route-btn::before{content:"➜"; font-size:14px;}
-.sheet-route-btn:hover{transform:translateY(-1px);}
-
-/* portal event tanpa hint tombol */
-.event-portal-marker.single-event .event-portal-hint{display:none !important;}
-.event-portal-marker.single-event .event-portal-label{top:-14px !important; font-size:11px !important;}
-.event-portal-marker.single-event{width:92px !important; height:122px !important;}
-
-/* awan/kabut untuk nutup bocor biru */
-.horizon-cloud-fx{display:block !important; opacity:1 !important; pointer-events:none !important;}
-.cloud-band,.cloud-band-b,.mist-layer,.mist-layer-b{display:block !important;}
-.cloud-band{
-  top:-6vh !important; height:20vh !important; opacity:.72 !important;
-  background:linear-gradient(180deg,rgba(233,245,255,.94),rgba(214,234,248,.78),rgba(214,234,248,0)) !important;
-  filter:blur(6px) !important;
-}
-.cloud-band-b{
-  top:6vh !important; height:16vh !important; opacity:.52 !important;
-  background:linear-gradient(180deg,rgba(208,228,241,.78),rgba(208,228,241,.20),rgba(208,228,241,0)) !important;
-  filter:blur(14px) !important;
-}
-.mist-layer{
-  top:11vh !important; height:12vh !important; opacity:.22 !important;
-  background:linear-gradient(180deg,rgba(223,238,247,.52),rgba(223,238,247,0)) !important;
-  filter:blur(18px) !important;
-}
-.mist-layer-b{
-  top:16vh !important; height:10vh !important; opacity:.14 !important;
-  background:linear-gradient(180deg,rgba(220,236,246,.38),rgba(220,236,246,0)) !important;
-  filter:blur(28px) !important;
-}
-.snow-dust{display:none !important;}
-
-/* karakter utama lebih jelas */
-.maplibregl-marker.player-map-marker,.player-map-marker{
-  width:118px !important;
-  height:152px !important;
-  overflow:visible !important;
-  filter:drop-shadow(0 12px 16px rgba(12,33,74,.24)) !important;
-}
-.player-map-marker .player-name-tag{
-  top:4px !important;
-  padding:5px 10px !important;
-  font-size:12px !important;
-  z-index:2;
-}
-.player-map-marker .player-sprite.player-sprite-image{
-  width:88px !important; height:112px !important;
-  left:50% !important; top:50% !important;
-  transform:translate(-50%,-50%) !important;
-  object-fit:contain !important; object-position:center bottom !important;
-  background:none !important; image-rendering:auto !important;
-}
-.player-map-marker .player-shadow{width:34px !important; height:10px !important; top:89% !important;}
-.player-map-marker .player-ring{width:86px !important; height:86px !important; top:77% !important; border-width:2px !important;}
-
-/* status/weather lebih rapih */
-.top-status.compact-status{top:14px !important; left:14px !important; width:190px !important; z-index:170 !important;}
-.weather-chip{top:14px !important; left:50% !important; transform:translateX(-50%) !important; z-index:170 !important; min-width:220px !important;}
-
-/* mobile: jangan numpuk */
-@media (max-width: 768px){
-  .top-status.compact-status{width:150px !important; padding:12px !important;}
-  .weather-chip{min-width:160px !important; max-width:42vw !important; padding:9px 12px !important;}
-  .weather-info b{font-size:15px !important;}
-  .weather-info span{font-size:12px !important;}
-  .weather-info small{font-size:10px !important;}
-  .anime-chat-dock{left:12px !important; right:12px !important; width:auto !important; top:66px !important;}
-  .chat-toggle{top:14px !important; right:12px !important; width:66px !important;}
-  .fab-compass{right:86px !important; width:46px !important; height:46px !important;}
-  .fab-locate{right:12px !important; bottom:166px !important; width:52px !important; height:52px !important;}
-  .mapdex-action{right:12px !important; bottom:94px !important; width:76px !important; height:76px !important;}
-  .dex-action{right:12px !important; bottom:16px !important; width:76px !important; height:54px !important; font-size:13px !important;}
-  .move-pad{left:12px !important; bottom:78px !important; transform:scale(.94); transform-origin:left bottom;}
-  .main-action{bottom:12px !important; width:72px !important; height:72px !important;}
-  .player-map-marker .player-name-tag{font-size:11px !important; max-width:100px; overflow:hidden; text-overflow:ellipsis;}
-}
-
-/* ===== v50 bugfix ===== */
-.player-map-marker .player-sprite.player-sprite-image{
-  display:block !important;
-  width:96px !important;
-  height:128px !important;
-  left:50% !important;
-  top:48% !important;
-  transform:translate(-50%,-50%) !important;
-  background-repeat:no-repeat !important;
-  background-position:center bottom !important;
-  background-size:contain !important;
-  background-color:transparent !important;
-  filter:drop-shadow(0 6px 10px rgba(0,0,0,.18)) !important;
-}
-.player-map-marker .player-shadow{top:87% !important;}
-.player-map-marker .player-ring{top:75% !important;}
-/* ensure old generic hidden/offroad styles don't kill sprite */
-.player-map-marker .player-sprite.player-sprite-image::before,
-.player-map-marker .player-sprite.player-sprite-image::after{content:none !important;}
-
-@media (max-width: 768px){
-  .top-status.compact-status{width:146px !important;}
-  .weather-chip{max-width:44vw !important;}
-}
+/* HUD tetap di atas kabut */
+.top-status,.top-actions,.move-pad,.main-action,.dex-action,.mapdex-action,.fab,.bottom-left-profile,.sheet-mini-btn{z-index:80!important;}
